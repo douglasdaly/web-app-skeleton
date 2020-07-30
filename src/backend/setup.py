@@ -3,7 +3,10 @@
 """
 Setup file for application installation.
 """
-from setuptools import setup
+from setuptools import (
+    find_packages,
+    setup,
+)
 
 
 #
@@ -12,11 +15,13 @@ from setuptools import setup
 
 PACKAGES = [
     'app',
+    'app.*',
 ]
 
 PYTHON_REQUIRES = ">=3.8"
 
 REQUIRES = [
+    "click",
     "email-validator",
     "emails",
     "fastapi",
@@ -29,9 +34,15 @@ REQUIRES = [
     "tenacity",
 ]
 
-EXTRAS_REQUIRE = {}
+EXTRAS_REQUIRE = {
+    "Postgres": ["psycopg2-binary"],
+}
 
-ENTRY_POINTS = {}
+ENTRY_POINTS = {
+    "console_scripts": [
+        "app=app.cli.core:main",
+    ]
+}
 
 
 #
@@ -40,7 +51,7 @@ ENTRY_POINTS = {}
 
 setup(
     name='app',
-    packages=PACKAGES,
+    packages=find_packages(include=PACKAGES),
     python_requires=PYTHON_REQUIRES,
     install_requires=REQUIRES,
     extras_require=EXTRAS_REQUIRE,

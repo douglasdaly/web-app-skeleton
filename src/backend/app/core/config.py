@@ -20,7 +20,9 @@ class Settings(BaseSettings):
     API_VERSION: str = "v1"
     PROJECT_NAME: str
 
+    # - Environment
     DEBUG: bool = False
+    LOG_LEVEL: str = "info"
 
     # - Server
     SERVER_NAME: str

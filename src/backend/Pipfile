@@ -7,7 +7,6 @@ verify_ssl = true
 coverage = "*"
 flake8 = "*"
 mypy = "*"
-pytest = "*"
 pytest-cov = "*"
 pytest-mypy = "*"
 pytest-xdist = "*"
@@ -25,6 +24,7 @@ orjson = "*"
 passlib = {extras = ["bcrypt"],version = "*"}
 psycopg2-binary = "*"
 pydantic = "*"
+pytest = "*"
 python-dotenv = "*"
 python-jose = {extras = ["cryptography"],version = "*"}
 python-multipart = "*"
@@ -32,6 +32,7 @@ requests = "*"
 sqlalchemy = "*"
 tenacity = "*"
 uvicorn = "*"
+click = "*"
 
 [requires]
 python_version = "3.8"

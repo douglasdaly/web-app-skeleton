@@ -4,10 +4,13 @@ Token schema.
 """
 from uuid import UUID
 
-from app.schema.base import BaseSchema
+from app.schema.base import (
+    BaseSchema,
+    BaseSchemaJS,
+)
 
 
-class Token(BaseSchema):
+class Token(BaseSchemaJS):
     """
     Basic access-token schema.
     """

@@ -1,0 +1,4 @@
+// *** PURELY FOR VSCODE ***
+{
+    "extends": "./src/frontend/tsconfig.json"
+}

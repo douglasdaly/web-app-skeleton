@@ -50,7 +50,10 @@ help:  ## Shows the help menu for all targets.
 
 # Environment
 .PHONY: setup
-setup:  ## Sets up the development environment.
+setup: setup-backend  ## Sets up the development environment.
+
+.PHONY: setup-backend
+setup-backend:  ### Sets up the backend's development environment.
 	$(MAKE) -C $(BACKEND_DIR) setup
 
 .PHONY: teardown
@@ -93,6 +96,10 @@ debug: debug-backend  ## Debugs the application on the local machine.
 .PHONY: debug-backend
 debug-backend:  ### Runs the backend application for debugging.
 	$(MAKE) -C $(BACKEND_DIR) debug
+
+.PHONY: debug-frontend
+debug-frontend:  ### Runs the frontend application for debugging.
+	$(MAKE) -C $(FRONTEND_DIR) debug
 
 # Misc.
 .PHONY: cloc
