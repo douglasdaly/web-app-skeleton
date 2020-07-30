@@ -1,0 +1,37 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+coverage = "*"
+flake8 = "*"
+mypy = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mypy = "*"
+pytest-xdist = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+sqlalchemy-stubs = "*"
+
+[packages]
+app = {editable = true, path = "."}
+alembic = "*"
+email-validator = "*"
+emails = "*"
+fastapi = "*"
+orjson = "*"
+passlib = {extras = ["bcrypt"],version = "*"}
+psycopg2-binary = "*"
+pydantic = "*"
+python-dotenv = "*"
+python-jose = {extras = ["cryptography"],version = "*"}
+python-multipart = "*"
+requests = "*"
+sqlalchemy = "*"
+tenacity = "*"
+uvicorn = "*"
+
+[requires]
+python_version = "3.8"
