@@ -2,12 +2,21 @@
 """
 Schema for API communications.
 """
-from app.schema.message import Msg
+from app.schema.msg import (
+    Msg,
+    StatusMsg,
+)
 from app.schema.name import (
     Name,
     NameCreate,
     NameStored,
     NameUpdate,
+)
+from app.schema.role import (
+    Role,
+    RoleCreate,
+    RoleStored,
+    RoleUpdate,
 )
 from app.schema.token import (
     Token,
@@ -26,6 +35,11 @@ __all__ = [
     'NameCreate',
     'NameStored',
     'NameUpdate',
+    'Role',
+    'RoleCreate',
+    'RoleStored',
+    'RoleUpdate',
+    'StatusMsg',
     'Token',
     'TokenPayload',
     'User',

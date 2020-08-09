@@ -20,6 +20,7 @@ UnitOfWork = load_uow_class()
 # - Register models with UnitOfWork class
 MODEL_MAP = {
     models.Name: repos.NameRepository,
+    models.Role: repos.RoleRepository,
     models.User: repos.UserRepository,
 }
 

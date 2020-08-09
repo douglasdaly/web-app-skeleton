@@ -1,4 +1,4 @@
-import { IToken, IUser } from '../schema';
+import { IMsg, IToken, IUser } from '../schema';
 import request from '@/utils/request';
 
 const api = {
@@ -18,9 +18,23 @@ const api = {
     );
   },
 
+  async logout(): Promise<IMsg> {
+    return request.post('/logout');
+  },
+
   async testToken(): Promise<IUser> {
     return request.post('/login/test-token');
   },
+
+  async recoverPassword(email: string): Promise<IMsg> {
+    return request.post(`/password-recovery/${email}`);
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<IMsg> {
+    const data = { token, newPassword };
+    return request.post('/reset-password/', data);
+  },
+
 };
 
 export default api;

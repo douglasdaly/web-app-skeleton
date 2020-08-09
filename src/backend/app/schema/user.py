@@ -13,6 +13,7 @@ from app.schema.name import (
     NameCreate,
     NameUpdate,
 )
+from app.schema.role import Role
 
 
 # Base class
@@ -34,6 +35,7 @@ class UserCreate(UserBase):
     email: EmailStr
     password: str
     name: tp.Optional[NameCreate] = None
+    roles: tp.Optional[tp.List[str]] = None
 
 
 # - Update
@@ -43,6 +45,7 @@ class UserUpdate(UserBase):
     """
     password: tp.Optional[str] = None
     name: tp.Optional[NameUpdate] = None
+    roles: tp.Optional[tp.List[str]] = None
 
 
 # Storage base schema
@@ -52,6 +55,7 @@ class UserBaseStored(UserBase):
     """
     uid: tp.Optional[UUID] = None
     name: tp.Optional[Name] = None
+    roles: tp.List[Role] = []
 
     class Config:
         orm_mode: bool = True

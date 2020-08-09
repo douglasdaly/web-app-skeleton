@@ -12,6 +12,7 @@
     </v-toolbar>
     <v-card-text>
       <v-form
+        ref="loginForm"
         :disabled="loading"
         @keyup.enter="submit"
       >
@@ -20,7 +21,7 @@
           prepend-icon="mdi-email"
           name="email"
           label="Email"
-          ref="email"
+          ref="emailField"
           type="text"
           @keyup.enter="submit"
         ></v-text-field>
@@ -29,7 +30,7 @@
           prepend-icon="mdi-lock"
           name="password"
           label="Password"
-          ref="password"
+          ref="passwordField"
           :type="passwordType"
           @keyup.enter="submit"
         ></v-text-field>
@@ -90,10 +91,12 @@ export default class LoginForm extends Vue {
   private otherQuery: Dictionary<string> = {};
   private passwordType = 'password';
 
+  // Computed
   public get loginError(): boolean {
-    return this.$store.state.auth.loginError;
+    return AuthModule.loginError;
   }
 
+  // Hooks
   @Watch('$route', { immediate: true })
   private onRouteChange(route: Route) {
     const query = route.query as Dictionary<string>;
@@ -103,6 +106,15 @@ export default class LoginForm extends Vue {
     }
   }
 
+  mounted() {
+    if (this.email === '') {
+      (this.$refs.emailField as HTMLFormElement).focus();
+    } else if (this.password === '') {
+      (this.$refs.passwordField as HTMLFormElement).focus();
+    }
+  }
+
+  // Functions
   private showPassword() {
     if (this.passwordType === 'password') {
       this.passwordType = 'text';

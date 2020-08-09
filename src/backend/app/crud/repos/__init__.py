@@ -11,6 +11,10 @@ from app.crud.repos.name import (
     NameRepository,
     NameRepositoryBase,
 )
+from app.crud.repos.role import (
+    RoleRepository,
+    RoleRepositoryBase,
+)
 from app.crud.repos.user import (
     UserRepository,
     UserRepositoryBase,

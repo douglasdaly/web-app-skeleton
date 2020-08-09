@@ -31,6 +31,7 @@ router = APIRouter()
 
 @router.post("/login/access-token", response_model=schema.Token)
 async def login_access_token(
+    *,
     uow: IUnitOfWork = Depends(common.get_uow),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> tp.Dict[str, str]:
@@ -57,8 +58,21 @@ async def login_access_token(
     }
 
 
+@router.post("/logout", response_model=schema.Msg)
+async def logout(
+    *,
+    current_user: models.User = Depends(common.get_current_user),
+) -> tp.Dict[str, str]:
+    """Logs out the currently logged-in user."""
+    # Any additional actions here
+    return {
+        'msg': f'Successfully logged out: {current_user.email}',
+    }
+
+
 @router.post("/login/test-token", response_model=schema.User)
 async def test_token(
+    *,
     current_user: models.User = Depends(common.get_current_user),
 ) -> models.User:
     """Test access token for validity."""
@@ -68,6 +82,7 @@ async def test_token(
 @router.post("/password-recovery/{email}", response_model=schema.Msg)
 async def recover_password(
     user_email: str,
+    *,
     uow: IUnitOfWork = Depends(common.get_uow),
 ) -> tp.Dict[str, str]:
     """Sends a password recovery email."""
@@ -83,11 +98,12 @@ async def recover_password(
         email=user_email,
         token=reset_token,
     )
-    return {"message": "Password recovery email sent"}
+    return {"msg": "Password recovery email sent"}
 
 
 @router.post("/reset-password/", response_model=schema.Msg)
 async def reset_password(
+    *,
     token: str = Body(...),
     new_password: str = Body(...),
     uow: IUnitOfWork = Depends(common.get_uow),
@@ -108,4 +124,4 @@ async def reset_password(
     hashed_pw = security.get_password_hash(new_password)
     with uow:
         uow.user.update(user, hashed_password=hashed_pw)
-    return {"message": "Password updated successfully"}
+    return {"msg": "Password updated successfully"}

@@ -8,7 +8,7 @@
 	@cp sample.env .env
 
 # - Include .env variables & set defaults (if needed)
--include: .env
+-include .env
 
 PKG_MGR ?= yarn
 

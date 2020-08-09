@@ -7,6 +7,10 @@ from app.crud.models.name import (
     Name,
     NameBase,
 )
+from app.crud.models.role import (
+    Role,
+    RoleBase,
+)
 from app.crud.models.user import (
     User,
     UserBase,

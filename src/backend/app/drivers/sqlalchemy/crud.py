@@ -25,6 +25,8 @@ class SQLRepositoryMixin(object, metaclass=ABCMeta):
     """
     SQLAlchemy-based object storage repository mixin.
     """
+    __order_by__: tp.Optional[tp.Dict[str, tp.Callable]] = None
+
     if tp.TYPE_CHECKING:
         model: tp.Type[Base]
         uow: 'UnitOfWork'
@@ -50,7 +52,12 @@ class SQLRepositoryMixin(object, metaclass=ABCMeta):
         skip: int = 0,
         limit: tp.Optional[int] = 100,
     ) -> tp.List[ModelTypeSQL]:
-        ret = self.uow.db.query(self.model).offset(skip)
+        ret = self.uow.db.query(self.model)
+        if self.__order_by__:
+            for k, v in self.__order_by__.items():
+                ret = ret.order_by(v(getattr(self.model, k)))
+        if skip:
+            ret = ret.offset(skip)
         if limit is not None:
             ret = ret.limit(limit)
         return ret.all()

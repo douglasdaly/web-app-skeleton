@@ -142,6 +142,11 @@ async def read_user_by_id(
 ) -> models.User:
     """Gets a specific user by their unique ID."""
     user = uow.user.get(user_id)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this ID doesn't exist",
+        )
     if user == current_user:
         return user
     if not current_user.is_superuser:

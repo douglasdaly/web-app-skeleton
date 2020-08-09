@@ -80,7 +80,7 @@ async def get_current_active_super_user(
     current_user: models.User = Depends(get_current_active_user),
 ) -> models.User:
     """Gets the current (active) super user."""
-    if not current_user.is_superuser:
+    if not (current_user.is_superuser or current_user.is_admin):
         raise HTTPException(status_code=400, detail="Not enough privileges")
     return current_user
 
@@ -92,3 +92,26 @@ def get_current_active_admin(
     if not current_user.is_admin:
         raise HTTPException(status_code=400, detail="Not enough privileges")
     return current_user
+
+
+class get_current_active_user_with_roles:
+    """
+    Gets the current (active) user with the specified role(s).
+    """
+
+    def __init__(self, *roles: str, match_all: bool = True) -> None:
+        self.roles = roles
+        self.match_all=match_all
+
+    def __call__(
+        self,
+        current_user = Depends(get_current_active_user)
+    ) -> models.User:
+        user_roles = (x.name for x in current_user.roles)
+        op = all if self.match_all else any
+        if not op(x in user_roles for x in self.roles):
+            raise HTTPException(
+                status_code=400,
+                detail="Not enough privileges",
+            )
+        return current_user

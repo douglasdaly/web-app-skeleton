@@ -25,6 +25,7 @@ class IModels(tp.Protocol):
     """
     __all__: tp.List[str]
     Name: tp.Type[models.NameBase]
+    Role: tp.Type[models.RoleBase]
     User: tp.Type[models.UserBase]
 
 
@@ -32,8 +33,10 @@ class IRepos(tp.Protocol):
     """
     Interface for the dynamically-loaded ``repos`` module.
     """
+    __all__: tp.List[str]
     Repository: tp.Type[repos.RepositoryBase]
     NameRepository: tp.Type[repos.NameRepositoryBase]
+    RoleRepository: tp.Type[repos.RoleRepositoryBase]
     UserRepository: tp.Type[repos.UserRepositoryBase]
 
 
@@ -41,8 +44,9 @@ class IUnitOfWork(tp.ContextManager, tp.Protocol):
     """
     Interface for the dynamically-loaded UnitOfWork object.
     """
-    user: repos.UserRepository
     name: repos.NameRepository
+    role: repos.RoleRepository
+    user: repos.UserRepository
 
     def close(self) -> None:
         ...
@@ -62,8 +66,9 @@ class UnitOfWorkBase(
     Unit-of-Work abstract base class.
     """
     if tp.TYPE_CHECKING:
-        user: repos.UserRepository
         name: repos.NameRepository
+        user: repos.UserRepository
+        role: repos.RoleRepository
 
     __models: tp.Set[tp.Type[ModelType]]
 

@@ -13,7 +13,10 @@ from app.drivers.sqlalchemy.session import (
     engine,
     SessionLocal,
 )
-from app.schema import UserCreate
+from app.schema import (
+    RoleCreate,
+    UserCreate,
+)
 
 __all__ = [
     'create_uow',
@@ -65,6 +68,17 @@ def setup_storage() -> None:
     Base.metadata.create_all(bind=engine)
 
     uow = create_uow()
+    # - Make admin role
+    role = uow.role.get_by_name('admin')
+    if not role:
+        new_role = RoleCreate(
+            name="admin",
+            description="System administrator role.",
+        )
+        with uow:
+            role = uow.role.create(obj_in=new_role)
+
+    # - Make first admin
     user = uow.user.get_by_email(settings.FIRST_ADMIN_USER)
     if not user:
         new_user = UserCreate(
@@ -72,6 +86,7 @@ def setup_storage() -> None:
             password=settings.FIRST_ADMIN_PASSWORD,
             is_superuser=True,
             is_admin=True,
+            roles=[role.name],
         )
         with uow:
             user = uow.user.create(obj_in=new_user)
