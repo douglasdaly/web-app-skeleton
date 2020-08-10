@@ -74,14 +74,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Dictionary } from 'vue-router/types/router';
 
 import AuthModule from '@/store/modules/auth';
+import RouteModule from '@/store/modules/routes';
 
 @Component
 export default class LoginForm extends Vue {
+  @Prop({ default: '/' }) readonly defaultRedirect!: string;
   private valid = true;
   private loading = false;
   private email = '';
@@ -130,8 +132,10 @@ export default class LoginForm extends Vue {
     this.loading = true;
     const result = await AuthModule.Login({ email: this.email, password: this.password });
     if (result === true) {
+      await RouteModule.GenerateRoutes(AuthModule.roles);
+      this.$router.addRoutes(RouteModule.dynamicRoutes);
       this.$router.push({
-        path: this.redirect || '/',
+        path: this.redirect || this.defaultRedirect,
         query: this.otherQuery,
       });
     }

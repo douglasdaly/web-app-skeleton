@@ -20,12 +20,12 @@
             v-bind="attrs"
             v-on="on"
         >
-            <v-icon>mdi-account</v-icon>
+          <v-icon>mdi-account</v-icon>
         </v-btn>
       </template>
 
       <v-list>
-        <v-list-item>
+        <v-list-item to="/profile/index">
             <v-list-item-title>Profile</v-list-item-title>
             <v-list-item-action>
             <v-icon dense>mdi-card-account-details-outline</v-icon>
@@ -43,12 +43,21 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-btn v-else
-        icon
-        :to="{ path: '/login', query: { redirect: this.$route.fullPath } }"
+    <v-tooltip v-else
+      bottom
     >
-      <v-icon>mdi-account-lock</v-icon>
-    </v-btn>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+            icon
+            :to="{ path: '/login', query: { redirect: $route.fullPath } }"
+            v-bind="attrs"
+            v-on="on"
+        >
+          <v-icon>mdi-account-lock</v-icon>
+        </v-btn>
+      </template>
+      <span>Login</span>
+    </v-tooltip>
   </v-app-bar>
 </template>
 

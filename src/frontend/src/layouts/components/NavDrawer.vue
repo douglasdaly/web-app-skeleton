@@ -7,78 +7,28 @@
       clipped
       disable-resize-watcher
     >
-      <v-list>
-        <v-list-item to="/">
-          <v-list-item-action>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item to="/about">
-          <v-list-item-action>
-            <v-icon>mdi-help-box</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>About</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item @click.stop="left = !left">
-          <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Tools</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-navigation-drawer
-      v-model="left"
-      fixed
-      temporary
-    >
-      <v-list-item>
-        <v-list-item-action>
-          <v-icon>mdi-briefcase-account-outline</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Contacts</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-action>
-          <v-icon>mdi-calendar</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Calendar</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-action>
-          <v-icon>mdi-airplane</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Travel</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <nav-item v-for="(item, index) in routes"
+        :item="item"
+        :key="`${item.path}-${index}`"
+      ></nav-item>
     </v-navigation-drawer>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
+import { RouteConfig } from 'vue-router';
 import { isMobile } from 'mobile-device-detect';
 
+import NavItem from './NavItem.vue';
 import AppModule, { DeviceType } from '@/store/modules/app';
+import RouteModule from '@/store/modules/routes';
 
-@Component
+@Component({
+  components: {
+    NavItem,
+  }
+})
 export default class NavDrawer extends Vue {
   private left = false;
 
@@ -98,6 +48,10 @@ export default class NavDrawer extends Vue {
   }
 
   // Getters
+  get routes(): RouteConfig[] {
+    return RouteModule.routes;
+  }
+
   get showNavigation() {
     return AppModule.drawer.opened;
   }

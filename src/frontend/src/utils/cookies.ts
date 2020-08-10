@@ -9,6 +9,7 @@ function getKey(key: string): string {
 }
 
 // Application
+// - Drawer Status
 const drawerStatusKey = getKey('sidebar_status');
 
 export function getDrawerStatus(): string | undefined {

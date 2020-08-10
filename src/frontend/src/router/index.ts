@@ -3,7 +3,7 @@ import VueRouter, { Route, RouteConfig } from 'vue-router';
 
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import AuthModule from '@/store/modules/auth';
-import PermissionModule from '@/store/modules/permissions';
+import RouteModule from '@/store/modules/routes';
 
 Vue.use(VueRouter);
 
@@ -24,23 +24,41 @@ export const constantRoutes: RouteConfig[] = [
         name: 'Home',
         meta: {
           title: 'Home',
+          icon: 'mdi-home',
         },
       },
+    ],
+  },
+  {
+    path: '/',
+    component: DefaultLayout,
+    redirect: '/about',
+    children: [
       {
-        path: '/about',
+        path: 'about',
         name: 'About',
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
         meta: {
           title: 'About',
+          icon: 'mdi-help-box',
         },
       },
+    ],
+  },
+  {
+    path: '/',
+    component: DefaultLayout,
+    redirect: '/login',
+    meta: {
+      hidden: true,
+    },
+    children: [
       {
-        path: '/login',
+        path: 'login',
         name: 'Login',
         component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
         meta: {
           title: 'Login',
-          hidden: true,
         },
       },
     ]
@@ -53,6 +71,25 @@ export const constantRoutes: RouteConfig[] = [
  * These routes are loaded dynamically based on user roles.
  */
 export const dynamicRoutes: RouteConfig[] = [
+  {
+    path: '/profile',
+    component: DefaultLayout,
+    redirect: '/profile/index',
+    meta: {
+      requiresAuth: true,
+      hidden: true,
+    },
+    children: [
+      {
+        path: 'index',
+        name: 'ProfileIndex',
+        component: () => import(/* webpackChunkName: "admin/index" */ '../views/profile/Index.vue'),
+        meta: {
+          title: 'Profile',
+        }
+      }
+    ]
+  }
 ];
 
 const createRouter = () => new VueRouter({
@@ -71,27 +108,37 @@ const router = createRouter();
 
 // Guard setup
 router.beforeEach(async (to: Route, from: Route, next: any) => {
-  await AuthModule.CheckAuth();
   if (AuthModule.loggedIn) {
     if (to.fullPath === '/login') {
-      next('/');
+      next({ ...from, replace: true });
     } else {
       next();
     }
   } else {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      });
+    const result = await AuthModule.CheckAuth();
+    if (result) {
+      RouteModule.GenerateRoutes(AuthModule.roles);
+      router.addRoutes(RouteModule.dynamicRoutes);
+      next({ ...to, replace: true });
     } else {
-      next();
+      if (RouteModule.routes.length === 0) {
+        RouteModule.GenerateRoutes([]);
+      }
+      if (to.matched.some(record => record.meta.requiresAuth)) {
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        });
+      } else {
+        next();
+      }
     }
   }
 });
 
 export function resetRouter() {
   const newRouter = createRouter();
+  RouteModule.ClearRoutes();
   (router as any).matcher = (newRouter as any).matcher; // reset router
 }
 

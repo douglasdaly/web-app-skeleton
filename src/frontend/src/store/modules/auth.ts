@@ -10,7 +10,7 @@ import api from '@/api';
 import { IMsg, IUser } from '@/api/schema';
 import { resetRouter } from '@/router';
 import store from '@/store';
-import { getLocalToken, saveLocalToken, removeLocalToken } from '@/utils/jwt';
+import { getLocalToken, saveLocalToken, removeLocalToken } from '@/utils/local';
 import { getToken, removeToken, setToken } from '@/utils/cookies';
 
 @Module({ name: 'auth', dynamic: true, store })
@@ -72,13 +72,12 @@ class AuthModule extends VuexModule {
       }
 
       let user: IUser | null;
-      let loggedIn = false;
       try {
         user = await api.auth.testToken();
-        loggedIn = true;
       } catch {
         user = null;
       }
+      const loggedIn = user !== null;
       this.SET_LOGGED_IN(loggedIn);
       this.SET_LOGIN_ERROR(false);
       this.SET_USER(user);
