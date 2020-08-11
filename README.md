@@ -1,6 +1,7 @@
 # Modern Web Application
 
-*A modern web application skeleton.*
+*A full-stack project skeleton for rapid modern web application
+development using Python and Vue.*
 
 ## About
 

@@ -30,7 +30,6 @@ import RouteModule from '@/store/modules/routes';
   }
 })
 export default class NavDrawer extends Vue {
-  private left = false;
 
   // Hooks
   @Watch('$route')

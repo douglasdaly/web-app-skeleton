@@ -1,5 +1,5 @@
 <template>
-  <v-container px-8>
+  <v-container>
     <v-row>
       <v-col>
         <h1>About</h1>

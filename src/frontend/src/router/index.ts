@@ -63,6 +63,35 @@ export const constantRoutes: RouteConfig[] = [
       },
     ]
   },
+  {
+    path: '/',
+    component: DefaultLayout,
+    meta: {
+      hidden: true,
+    },
+    children: [
+      {
+        path: '400',
+        component: () => import(/* webpackChunkName: "400" */ '../views/errors/400.vue'),
+      },
+      {
+        path: '401',
+        component: () => import(/* webpackChunkName: "401" */ '../views/errors/401.vue'),
+      },
+      {
+        path: '403',
+        component: () => import(/* webpackChunkName: "403" */ '../views/errors/403.vue'),
+      },
+      {
+        path: '404',
+        component: () => import(/* webpackChunkName: "404" */ '../views/errors/404.vue'),
+      },
+      {
+        path: '500',
+        component: () => import(/* webpackChunkName: "500" */ '../views/errors/500.vue'),
+      },
+    ],
+  },
 ];
 
 /**
@@ -72,9 +101,9 @@ export const constantRoutes: RouteConfig[] = [
  */
 export const dynamicRoutes: RouteConfig[] = [
   {
-    path: '/profile',
+    path: '/account',
     component: DefaultLayout,
-    redirect: '/profile/index',
+    redirect: '/account/index',
     meta: {
       requiresAuth: true,
       hidden: true,
@@ -82,12 +111,31 @@ export const dynamicRoutes: RouteConfig[] = [
     children: [
       {
         path: 'index',
-        name: 'ProfileIndex',
-        component: () => import(/* webpackChunkName: "admin/index" */ '../views/profile/Index.vue'),
+        name: 'AccountIndex',
+        component: () => import(/* webpackChunkName: "account/index" */ '../views/account/Index.vue'),
         meta: {
-          title: 'Profile',
+          title: 'Dashboard',
+          icon: 'mdi-view-dashboard',
         }
-      }
+      },
+      {
+        path: 'profile',
+        name: 'AccountProfile',
+        component: () => import(/* webpackChunkName: "account/profile" */ '../views/account/Profile.vue'),
+        meta: {
+          title: 'My Profile',
+          icon: 'mdi-card-account-details-outline',
+        }
+      },
+      {
+        path: 'authorization',
+        name: 'AccountAuthorization',
+        component: () => import(/* webpackChunkName: "account/authorization" */ '../views/account/Authorization.vue'),
+        meta: {
+          title: 'Authorization',
+          icon: 'mdi-account-lock-outline',
+        },
+      },
     ]
   }
 ];

@@ -25,10 +25,10 @@
       </template>
 
       <v-list>
-        <v-list-item to="/profile/index">
-            <v-list-item-title>Profile</v-list-item-title>
+        <v-list-item to="/account/index">
+            <v-list-item-title>My Account</v-list-item-title>
             <v-list-item-action>
-            <v-icon dense>mdi-card-account-details-outline</v-icon>
+            <v-icon dense>mdi-account-cog</v-icon>
             </v-list-item-action>
         </v-list-item>
 
@@ -38,7 +38,7 @@
         >
             <v-list-item-title>Logout</v-list-item-title>
             <v-list-item-action>
-            <v-icon dense>mdi-account-lock</v-icon>
+            <v-icon dense>mdi-account-arrow-right</v-icon>
             </v-list-item-action>
         </v-list-item>
       </v-list>
