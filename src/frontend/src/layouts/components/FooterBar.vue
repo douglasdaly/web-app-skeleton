@@ -19,9 +19,7 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 
-@Component({
-  name: 'FooterBar',
-})
+@Component
 export default class FooterBar extends Vue {
 }
 </script>

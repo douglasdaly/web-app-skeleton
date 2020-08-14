@@ -44,17 +44,19 @@ export function filterRoutes(routes: RouteConfig[], roles: string[]): RouteConfi
   return ret;
 }
 
-@Module({ dynamic: true, name: 'permissions', store })
-class RouteModule extends VuexModule {
+@Module({ dynamic: true, name: 'routes', store })
+class RoutesModule extends VuexModule {
   public routes: RouteConfig[] = [];
   public dynamicRoutes: RouteConfig[] = [];
 
+  // Mutations
   @Mutation
   private SET_ROUTES(routes: RouteConfig[]) {
     this.routes = constantRoutes.concat(routes);
     this.dynamicRoutes = routes;
   }
 
+  // Actions
   @Action
   public GenerateRoutes(roles: string[]) {
     let accessedRoutes: RouteConfig[];
@@ -73,4 +75,4 @@ class RouteModule extends VuexModule {
 
 }
 
-export default getModule(RouteModule);
+export default getModule(RoutesModule);

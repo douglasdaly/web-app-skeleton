@@ -22,7 +22,7 @@ import { isMobile } from 'mobile-device-detect';
 
 import NavItem from './NavItem.vue';
 import AppModule, { DeviceType } from '@/store/modules/app';
-import RouteModule from '@/store/modules/routes';
+import RoutesModule from '@/store/modules/routes';
 
 @Component({
   components: {
@@ -48,7 +48,7 @@ export default class NavDrawer extends Vue {
 
   // Getters
   get routes(): RouteConfig[] {
-    return RouteModule.routes;
+    return RoutesModule.routes;
   }
 
   get showNavigation() {

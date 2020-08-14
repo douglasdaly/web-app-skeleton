@@ -1,9 +1,6 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-col cols="3">
-        <sidebar></sidebar>
-      </v-col>
       <v-col>
         <v-card flat>
           <v-list-item>
@@ -22,6 +19,11 @@
           <v-divider></v-divider>
 
         </v-card>
+      </v-col>
+
+      <!-- Sidebar -->
+      <v-col sm="3" lg="2">
+        <sidebar></sidebar>
       </v-col>
     </v-row>
   </v-container>

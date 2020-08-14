@@ -3,7 +3,7 @@ import VueRouter, { Route, RouteConfig } from 'vue-router';
 
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import AuthModule from '@/store/modules/auth';
-import RouteModule from '@/store/modules/routes';
+import RoutesModule from '@/store/modules/routes';
 
 Vue.use(VueRouter);
 
@@ -102,11 +102,13 @@ export const constantRoutes: RouteConfig[] = [
 export const dynamicRoutes: RouteConfig[] = [
   {
     path: '/account',
+    name: 'Account',
     component: DefaultLayout,
     redirect: '/account/index',
     meta: {
       requiresAuth: true,
       hidden: true,
+      roles: ['user'],
     },
     children: [
       {
@@ -123,7 +125,7 @@ export const dynamicRoutes: RouteConfig[] = [
         name: 'AccountProfile',
         component: () => import(/* webpackChunkName: "account/profile" */ '../views/account/Profile.vue'),
         meta: {
-          title: 'My Profile',
+          title: 'Profile',
           icon: 'mdi-card-account-details-outline',
         }
       },
@@ -165,12 +167,12 @@ router.beforeEach(async (to: Route, from: Route, next: any) => {
   } else {
     const result = await AuthModule.CheckAuth();
     if (result) {
-      RouteModule.GenerateRoutes(AuthModule.roles);
-      router.addRoutes(RouteModule.dynamicRoutes);
+      RoutesModule.GenerateRoutes(AuthModule.roles);
+      router.addRoutes(RoutesModule.dynamicRoutes);
       next({ ...to, replace: true });
     } else {
-      if (RouteModule.routes.length === 0) {
-        RouteModule.GenerateRoutes([]);
+      if (RoutesModule.routes.length === 0) {
+        RoutesModule.GenerateRoutes([]);
       }
       if (to.matched.some(record => record.meta.requiresAuth)) {
         next({
@@ -186,7 +188,7 @@ router.beforeEach(async (to: Route, from: Route, next: any) => {
 
 export function resetRouter() {
   const newRouter = createRouter();
-  RouteModule.ClearRoutes();
+  RoutesModule.ClearRoutes();
   (router as any).matcher = (newRouter as any).matcher; // reset router
 }
 

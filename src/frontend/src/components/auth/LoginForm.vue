@@ -83,7 +83,8 @@ import RouteModule from '@/store/modules/routes';
 
 @Component
 export default class LoginForm extends Vue {
-  @Prop({ default: '/' }) readonly defaultRedirect!: string;
+  @Prop({ default: '/account' }) readonly defaultRedirect!: string;
+
   private valid = true;
   private loading = false;
   private email = '';
@@ -130,7 +131,10 @@ export default class LoginForm extends Vue {
 
   public async submit() {
     this.loading = true;
-    const result = await AuthModule.Login({ email: this.email, password: this.password });
+    const result = await AuthModule.Login({
+      email: this.email,
+      password: this.password,
+    });
     if (result === true) {
       await RouteModule.GenerateRoutes(AuthModule.roles);
       this.$router.addRoutes(RouteModule.dynamicRoutes);

@@ -49,7 +49,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
             icon
-            :to="{ path: '/login', query: { redirect: $route.fullPath } }"
+            :to="{ path: '/login' }"
             v-bind="attrs"
             v-on="on"
         >

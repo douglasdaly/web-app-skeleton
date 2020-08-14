@@ -13,33 +13,20 @@
     <v-divider></v-divider>
 
     <v-list dense light>
-      <v-list-item to="index">
+      <v-list-item v-for="(route, key) in accountRoutes"
+        :key="`${route.name}-${key}`"
+        :to="route.path"
+      >
         <v-list-item-icon>
-          <v-icon>mdi-view-dashboard</v-icon>
+          <v-icon v-if="route.meta && route.meta.icon">
+            {{ route.meta.icon }}
+          </v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Dashboard</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item to="profile">
-        <v-list-item-icon>
-          <v-icon>mdi-card-account-details-outline</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>Profile</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item to="authorization">
-        <v-list-item-icon>
-          <v-icon>mdi-account-lock-outline</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>Authorization</v-list-item-title>
+          <v-list-item-title v-if="route.meta && route.meta.title">
+            {{ route.meta.title }}
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -48,8 +35,25 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { RouteConfig } from 'vue-router';
+
+import RoutesModule from '@/store/modules/routes';
 
 @Component
 export default class Sidebar extends Vue {
+
+  // Computed
+  get accountRoutes() {
+    const ret: RouteConfig[] = [];
+    RoutesModule.dynamicRoutes.forEach(route => {
+      if (route.path === '/account') {
+        if (route.children) {
+          ret.push(...route.children);
+        }
+      }
+    });
+    return ret;
+  }
+
 };
 </script>

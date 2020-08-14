@@ -42,12 +42,12 @@ const api = {
   },
 
   async updateUserMe(
-    email: string,
-    password: string,
-    name?: INameUpdate,
+    email: string | null,
+    password: string | null,
+    name: INameUpdate | null,
   ): Promise<IUser> {
     const data = { email, password, name };
-    return request.post(getApiUrl('me'), data);
+    return request.put(getApiUrl('me'), data);
   },
 
 };
