@@ -71,8 +71,8 @@ characteristics of it include:
 ### Frontend Features
 
 The frontend is (more-or-less) a standard [VueCLI](https://cli.vuejs.org/)-based
-project, written entirely in [TypeScript] and using the more-modern
-(and familiar) [Class-Based Component](https://class-component.vuejs.org/)
+project, written entirely in [TypeScript](https://www.typescriptlang.org/)
+and using the more-modern (and familiar) [Class-Based Component](https://class-component.vuejs.org/)
 style.
 
 - It relies upon [Vuetify](https://vuetifyjs.com/en/) for UI design,
@@ -112,4 +112,4 @@ examples, and work of others (if not already mentioned) - which I drew
 
 &copy; Copyright 2020, Douglas Daly (unless otherwise noted).  All
 rights reserved.  This project is licensed under the MIT License, see
-the [`LICENSE`](./LICENSE) "License File") for more details.
+the [`LICENSE`](./LICENSE "License File") for more details.

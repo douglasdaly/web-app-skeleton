@@ -61,10 +61,10 @@
     <v-list-item v-if="name && name.suffix">
       <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
 
-      <v-list-item-title>
-        {{ name.suffix }}
-      </v-list-item-title>
-      <v-list-item-subtitle>Suffix</v-list-item-subtitle>
+      <v-list-item-content>
+        <v-list-item-title>{{ name.suffix }}</v-list-item-title>
+        <v-list-item-subtitle>Suffix</v-list-item-subtitle>
+      </v-list-item-content>
     </v-list-item>
   </v-list>
 </template>

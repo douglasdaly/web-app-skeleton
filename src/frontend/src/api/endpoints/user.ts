@@ -41,13 +41,8 @@ const api = {
     return request.put(getApiUrl(userId), userIn);
   },
 
-  async updateUserMe(
-    email: string | null,
-    password: string | null,
-    name: INameUpdate | null,
-  ): Promise<IUser> {
-    const data = { email, password, name };
-    return request.put(getApiUrl('me'), data);
+  async updateUserMe(userIn: IUserUpdate): Promise<IUser> {
+    return request.put(getApiUrl('me'), userIn);
   },
 
 };

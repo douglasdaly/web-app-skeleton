@@ -1,43 +1,39 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-card flat>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title
-                class="headline"
-              >
-                Authorization
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                Login credentials management
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+  <v-card flat>
+    <v-list-item>
+      <v-list-item-content>
+        <v-list-item-title
+          class="headline"
+        >
+          Authorization
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          Login credentials management
+        </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
 
-          <v-divider></v-divider>
+    <v-divider></v-divider>
 
-        </v-card>
-      </v-col>
+    <!-- Content -->
+    <display-user-auth v-model="user"
+      show-roles
+    ></display-user-auth>
 
-      <!-- Sidebar -->
-      <v-col sm="3" lg="2">
-        <sidebar></sidebar>
-      </v-col>
-    </v-row>
-  </v-container>
+  </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
 import AuthModule from '@/store/modules/auth';
-import Sidebar from './components/Sidebar.vue';
+
+import DisplayUserAuth from '@/components/auth/DisplayUserAuth.vue';
 
 @Component({
+  name: 'AccountAuthorization',
   components: {
-    Sidebar,
+    DisplayUserAuth,
   }
 })
 export default class AccountAuthorization extends Vue {

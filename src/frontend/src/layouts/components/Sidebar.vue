@@ -2,18 +2,18 @@
   <v-card dark color="secondary">
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title
+        <v-list-item-title v-if="title"
           class="headline-2"
         >
-          My Account
+          {{ title }}
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
 
-    <v-divider></v-divider>
+    <v-divider v-if="title"></v-divider>
 
     <v-list dense light>
-      <v-list-item v-for="(route, key) in accountRoutes"
+      <v-list-item v-for="(route, key) in routes"
         :key="`${route.name}-${key}`"
         :to="route.path"
       >
@@ -34,26 +34,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
 
 import RoutesModule from '@/store/modules/routes';
 
 @Component
 export default class Sidebar extends Vue {
-
-  // Computed
-  get accountRoutes() {
-    const ret: RouteConfig[] = [];
-    RoutesModule.dynamicRoutes.forEach(route => {
-      if (route.path === '/account') {
-        if (route.children) {
-          ret.push(...route.children);
-        }
-      }
-    });
-    return ret;
-  }
-
+  @Prop() readonly title?: string;
+  @Prop({ required: true }) readonly routes!: RouteConfig[];
 };
 </script>

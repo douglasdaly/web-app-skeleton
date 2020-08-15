@@ -22,6 +22,5 @@ import LoginForm from '@/components/auth/LoginForm.vue';
   },
 })
 export default class Login extends Vue {
-
 }
 </script>

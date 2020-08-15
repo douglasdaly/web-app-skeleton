@@ -35,7 +35,7 @@ import DisplayName from '@/components/names/DisplayName.vue';
 })
 export default class DisplayUser extends Vue {
   @Model('change') private user!: IUser;
-  @Prop({ default: false }) private showEmail!: boolean;
+  @Prop([Boolean]) private showEmail?: boolean;
   @Prop({ default: true }) private showIcons!: boolean;
 };
 </script>

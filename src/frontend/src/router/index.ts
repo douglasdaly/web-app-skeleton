@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import VueRouter, { Route, RouteConfig } from 'vue-router';
 
-import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import AuthModule from '@/store/modules/auth';
 import RoutesModule from '@/store/modules/routes';
+
+import AccountLayout from '@/layouts/AccountLayout.vue';
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
 Vue.use(VueRouter);
 
@@ -103,7 +105,7 @@ export const dynamicRoutes: RouteConfig[] = [
   {
     path: '/account',
     name: 'Account',
-    component: DefaultLayout,
+    component: AccountLayout,
     redirect: '/account/index',
     meta: {
       requiresAuth: true,

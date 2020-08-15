@@ -8,7 +8,9 @@
     <app-bar></app-bar>
 
     <!-- Main content -->
-    <app-main></app-main>
+    <app-main>
+      <slot></slot>
+    </app-main>
 
     <!-- Footer -->
     <footer-bar></footer-bar>
