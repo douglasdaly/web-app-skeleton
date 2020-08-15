@@ -4,7 +4,7 @@ Name CRUD-based storage repository for SQLAlchemy driver.
 """
 import typing as tp
 
-from sqlalchemy import asc, desc
+from sqlalchemy import asc
 
 from app.crud.repos.name import NameRepositoryBase
 from app.drivers.sqlalchemy.crud import SQLRepositoryMixin

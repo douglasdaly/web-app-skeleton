@@ -8,11 +8,11 @@ from abc import (
 )
 import typing as tp
 
+from app.crud.models.name import NameType
 from app.crud.repos.base import (
     Repository,
     RepositoryBase,
 )
-from app.crud.models.name import NameType
 from app.schema.name import (
     NameCreate,
     NameUpdate,
