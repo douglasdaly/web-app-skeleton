@@ -1,4 +1,4 @@
-import { IMsg, IToken, IUser } from '../schema';
+import { IMsg, IToken, IUser, IUserUpdate } from '../schema';
 import request from '@/utils/request';
 
 const api = {
@@ -24,6 +24,11 @@ const api = {
 
   async testToken(): Promise<IUser> {
     return request.post('/login/test-token');
+  },
+
+  async updateLoginMe(password: string, newEmail?: string, newPassword?: string): Promise<IUser> {
+    const data = { password, newEmail, newPassword };
+    return request.post('/login/update', data);
   },
 
   async recoverPassword(email: string): Promise<IMsg> {

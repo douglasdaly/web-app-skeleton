@@ -38,7 +38,7 @@ export default class EditUser extends Vue {
   }
 
   public async submit() {
-    return api.user.updateUserMe({ name: this.nameUpdate });
+    return api.user.updateUserMe(this.nameUpdate);
   }
 
 }

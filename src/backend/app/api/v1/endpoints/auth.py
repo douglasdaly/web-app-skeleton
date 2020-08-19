@@ -4,6 +4,7 @@ Login API endpoints
 """
 from datetime import timedelta
 import typing as tp
+from uuid import UUID
 
 from fastapi import (
     APIRouter,
@@ -11,7 +12,9 @@ from fastapi import (
     Depends,
     HTTPException,
 )
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import EmailStr
 
 from app import schema
 from app.api import common
@@ -77,6 +80,38 @@ async def test_token(
 ) -> models.User:
     """Test access token for validity."""
     return current_user
+
+
+@router.post("/login/update", response_model=schema.User)
+async def update_login_me(
+    *,
+    password: str = Body(...),
+    new_email: tp.Optional[EmailStr] = Body(None, alias='newEmail'),
+    new_password: tp.Optional[str] = Body(None, alias='newPassword'),
+    current_user: models.User = Depends(common.get_current_user),
+    uow: IUnitOfWork = Depends(common.get_uow),
+) -> models.User:
+    """Updates the user's login credentials."""
+    user = uow.user.authenticate(current_user.email, password)
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect password"
+        )
+    elif not user.is_active:
+        raise HTTPException(
+            status_code=400,
+            detail="Inactive user",
+        )
+
+    user_in = schema.UserUpdate()
+    if new_email:
+        user_in.email = new_email
+    if new_password:
+        user_in.password = new_password
+    with uow:
+        new_user = uow.user.update(obj=user, obj_in=user_in)
+    return new_user
 
 
 @router.post("/password-recovery/{email}", response_model=schema.Msg)

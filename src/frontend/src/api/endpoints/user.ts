@@ -41,8 +41,8 @@ const api = {
     return request.put(getApiUrl(userId), userIn);
   },
 
-  async updateUserMe(userIn: IUserUpdate): Promise<IUser> {
-    return request.put(getApiUrl('me'), userIn);
+  async updateUserMe(name: INameUpdate): Promise<IUser> {
+    return request.put(getApiUrl('me'), { ...name });
   },
 
 };

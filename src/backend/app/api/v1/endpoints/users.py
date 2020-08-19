@@ -75,19 +75,12 @@ async def create_user(
 @router.put("/me", response_model=schema.User)
 async def update_user_me(
     *,
-    uow: IUnitOfWork = Depends(get_uow),
-    email: EmailStr = Body(None),
-    password: str = Body(None),
     name: schema.NameUpdate = Body(None),
+    uow: IUnitOfWork = Depends(get_uow),
     current_user: models.User = Depends(get_current_active_user),
 ) -> models.User:
     """Updates the current user's information."""
-    user_data = jsonable_encoder(current_user)
-    user_in = schema.UserUpdate(**user_data)
-    if password is not None:
-        user_in.password = password
-    if email is not None:
-        user_in.email = email
+    user_in = schema.UserUpdate()
     if name is not None:
         user_in.name = name
 

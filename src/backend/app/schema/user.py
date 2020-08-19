@@ -21,10 +21,7 @@ class UserBase(BaseSchemaJS):
     """
     Shared base class for User schema.
     """
-    email: tp.Optional[EmailStr] = None
-    is_active: tp.Optional[bool] = True
-    is_superuser: bool = False
-    is_admin: bool = False
+    pass
 
 
 # - Create
@@ -34,8 +31,11 @@ class UserCreate(UserBase):
     """
     email: EmailStr
     password: str
+    is_active: bool = True
+    is_superuser: bool = False
+    is_admin: bool = False
     name: tp.Optional[NameCreate] = None
-    roles: tp.Optional[tp.List[str]] = None
+    roles: tp.List[str] = []
 
 
 # - Update
@@ -43,7 +43,11 @@ class UserUpdate(UserBase):
     """
     Schema for updating users.
     """
+    email: tp.Optional[EmailStr] = None
     password: tp.Optional[str] = None
+    is_active: tp.Optional[bool] = None
+    is_superuser: tp.Optional[bool] = None
+    is_admin: tp.Optional[bool] = None
     name: tp.Optional[NameUpdate] = None
     roles: tp.Optional[tp.List[str]] = None
 
@@ -54,6 +58,10 @@ class UserBaseStored(UserBase):
     Schema for stored users.
     """
     uid: tp.Optional[UUID] = None
+    email: EmailStr
+    is_active: bool
+    is_superuser: bool
+    is_admin: bool
     name: tp.Optional[Name] = None
     roles: tp.List[Role] = []
 

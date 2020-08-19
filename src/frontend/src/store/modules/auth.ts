@@ -71,12 +71,8 @@ class AuthModule extends VuexModule {
         return true;
       }
 
-      let user: IUser | null;
-      try {
-        user = await api.auth.testToken();
-      } catch {
-        user = null;
-      }
+      const user = await api.auth.testToken()
+        .catch(() => null);
       const loggedIn = user !== null;
       this.SET_LOGGED_IN(loggedIn);
       this.SET_LOGIN_ERROR(false);

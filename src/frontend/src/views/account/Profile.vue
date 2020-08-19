@@ -100,8 +100,8 @@ import EditUser from '@/components/users/EditUser.vue';
   },
 })
 export default class AccountProfile extends Vue {
-  private modify = false;
   private loading = false;
+  private modify = false;
 
   // Computed
   get user() {
@@ -119,7 +119,7 @@ export default class AccountProfile extends Vue {
     if ((this.$refs.form as EditUser).validate())
     {
       await (this.$refs.form as EditUser).submit();
-      await AuthModule.GetUserInfo()
+      await AuthModule.GetUserInfo();
     }
     this.loading = false;
   }

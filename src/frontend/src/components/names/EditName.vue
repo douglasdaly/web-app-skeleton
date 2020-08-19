@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, PropSync, Watch, Vue } from 'vue-property-decorator';
+import { Component, Model, Vue } from 'vue-property-decorator';
 
 import { IName, INameUpdate } from '@/api/schema';
 
@@ -76,6 +76,7 @@ export default class EditName extends Vue {
     ];
   }
 
+  // Functions
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
   }
