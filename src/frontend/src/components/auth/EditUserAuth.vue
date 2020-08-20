@@ -2,6 +2,7 @@
   <v-form
     ref="form"
     v-model="valid"
+    @keydown.esc="$emit('cancel')"
   >
     <v-container fluid>
       <v-row>
@@ -10,6 +11,8 @@
             v-model="creds.newEmail"
             :rules="emailRules"
             label="New Email"
+            required
+            @keydown.enter="$emit('submit')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -18,7 +21,10 @@
           <v-text-field
             v-model="creds.newPassword"
             :rules="passwordRules"
+            :append-icon="showPassword1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword1 ? 'text' : 'password'"
             label="New Password"
+            @click:append="showPassword1 = !showPassword1"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -27,8 +33,12 @@
           <v-text-field
             v-model="confirmPassword"
             :rules="confirmRules"
+            :append-icon="showPassword2 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword2 ? 'text' : 'password'"
             label="Confirm New Password"
             :required="creds.newPassword ? true : false"
+            @click:append="showPassword2 = !showPassword2"
+            @keydown.enter="$emit('submit')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -51,9 +61,15 @@ export default class EditUserAuth extends Vue {
   public valid = false;
   private confirmPassword = '';
 
+  private showPassword1 = false;
+  private showPassword2 = false;
+
   // Validation
   get emailRules() {
-    return [];
+    return [
+      (v: string) => !!v || 'E-mail is required',
+      (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+    ];
   }
 
   get passwordRules() {
@@ -72,6 +88,7 @@ export default class EditUserAuth extends Vue {
     ];
   }
 
+  // Functions
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
   }

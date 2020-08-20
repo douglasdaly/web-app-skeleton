@@ -77,7 +77,6 @@ class AuthModule extends VuexModule {
       this.SET_LOGGED_IN(loggedIn);
       this.SET_LOGIN_ERROR(false);
       this.SET_USER(user);
-
       return loggedIn;
     }
     return false;
@@ -98,7 +97,6 @@ class AuthModule extends VuexModule {
         await this.GetUserInfo();
       }
     } catch (err) {
-      console.error(err);
       loginError = true;
     }
 

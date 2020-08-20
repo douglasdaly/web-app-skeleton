@@ -88,10 +88,17 @@
           <v-row>
             <v-col>
               <v-text-field
+                ref="passwordField"
                 v-model="password"
+                :error="passwordError ? true : undefined"
                 :rules="passwordRules"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
                 label="Current Password"
                 required
+                @click:append="showPassword = !showPassword"
+                @keydown.enter="saveChanges()"
+                @keydown.esc="cancelChanges()"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -101,6 +108,8 @@
       <edit-user-auth
         ref="authForm"
         v-model="authUpdate"
+        @submit="saveChanges()"
+        @cancel="cancelChanges()"
       ></edit-user-auth>
 
       <div v-if="errorMsg">
@@ -117,7 +126,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 import api from '@/api';
 import AuthModule from '@/store/modules/auth';
@@ -142,6 +151,9 @@ export default class AccountAuthorization extends Vue {
     newEmail: '',
     newPassword: '',
   };
+
+  private showPassword = false;
+  private passwordError = false;
   private errorMsg: string | null = null;
 
   // Computed
@@ -155,6 +167,14 @@ export default class AccountAuthorization extends Vue {
     ];
   }
 
+  // Watchers
+  @Watch('password')
+  private onPasswordChange() {
+    if (this.passwordError) {
+      this.passwordError = false;
+    }
+  }
+
   // Functions
   public validate() {
     (this.$refs.authForm as EditUserAuth).validate();
@@ -164,6 +184,7 @@ export default class AccountAuthorization extends Vue {
   private beginChanges() {
     this.errorMsg = null;
     this.password = '';
+    this.passwordError = false;
     this.authUpdate.newEmail = this.user ? this.user.email : '';
     this.authUpdate.newPassword = '';
     this.modify = true;
@@ -185,6 +206,8 @@ export default class AccountAuthorization extends Vue {
         })
         .catch(res => {
           this.errorMsg = res.response.data.detail;
+          this.passwordError = true;
+          (this.$refs.passwordField as HTMLFormElement).focus();
           return false;
         });
       if (result) {
@@ -198,7 +221,9 @@ export default class AccountAuthorization extends Vue {
   private cancelChanges() {
     this.errorMsg = null;
     this.password = '';
+    this.passwordError = false;
     this.modify = false;
+    this.loading = false;
   }
 
 }
