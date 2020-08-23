@@ -87,9 +87,9 @@ export default class AppBar extends Vue {
 
   public async logout() {
     this.loading = true;
+    this.$router.push('/');
     await AuthModule.Logout();
     this.loading = false;
-    this.$router.push('/');
   }
 
 }
