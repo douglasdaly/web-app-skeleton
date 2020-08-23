@@ -66,6 +66,15 @@
         <v-list-item-subtitle>Suffix</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+
+    <v-list-item v-if="name && name.preferred">
+      <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
+
+      <v-list-item-content>
+        <v-list-item-title>{{ name.preferred }}</v-list-item-title>
+        <v-list-item-subtitle>Preferred Name</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
   </v-list>
 </template>
 
