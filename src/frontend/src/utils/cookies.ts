@@ -20,6 +20,21 @@ export function setDrawerStatus(status: string) {
   Cookies.set(drawerStatusKey, status);
 }
 
+// - Cookies notified
+const cookieNotifyKey = getKey('cookies_notified');
+
+export function getCookiesNotified(): boolean | undefined {
+  return Cookies.get(cookieNotifyKey) === 'true';
+}
+
+export function setCookiesNotified(notified: boolean) {
+  Cookies.set(cookieNotifyKey, notified ? 'true' : 'false');
+}
+
+export function removeCookiesNotified() {
+  Cookies.remove(cookieNotifyKey);
+}
+
 // Auth
 const tokenKey = getKey('token');
 
@@ -39,6 +54,9 @@ export function removeToken() {
 const cookieFunctions = {
   getDrawerStatus,
   setDrawerStatus,
+  getCookiesNotified,
+  setCookiesNotified,
+  removeCookiesNotified,
   getToken,
   setToken,
   removeToken,

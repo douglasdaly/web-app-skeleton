@@ -12,6 +12,9 @@
       <slot></slot>
     </app-main>
 
+    <!-- Cookie notification -->
+    <cookie-notification></cookie-notification>
+
     <!-- Footer -->
     <footer-bar></footer-bar>
 
@@ -23,6 +26,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import AppBar from './components/AppBar.vue';
 import AppMain from './components/AppMain.vue';
+import CookieNotification from './components/CookieNotification.vue';
 import FooterBar from './components/FooterBar.vue';
 import NavDrawer from './components/NavDrawer.vue';
 
@@ -31,6 +35,7 @@ import NavDrawer from './components/NavDrawer.vue';
   components: {
     AppBar,
     AppMain,
+    CookieNotification,
     FooterBar,
     NavDrawer,
   }
