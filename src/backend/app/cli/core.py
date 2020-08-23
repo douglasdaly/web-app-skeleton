@@ -7,11 +7,18 @@ import logging
 import typing as tp
 
 import click
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_fixed,
+)
 import uvicorn
 
 from app.cli.settings import (
     DEFAULT_WSGI_SERVER,
+    MAX_TRIES,
     SUPPORTED_WSGI_SERVERS,
+    WAIT_SECONDS,
 )
 from app.cli.utils import (
     get_numeric_level,
@@ -141,7 +148,7 @@ def run_server(
 
 @main.group(invoke_without_command=True)
 @click.pass_context
-def storage(ctx: click.Context, **kwargs: str,) -> tp.Optional[int]:
+def storage(ctx: click.Context, **kwargs: str) -> tp.Optional[int]:
     """
     Storage related CLI tools.
     """
@@ -164,6 +171,40 @@ def storage_setup(ctx: click.Context, **kwargs: str) -> tp.Optional[int]:
     setup_storage()
 
     return 0
+
+
+@retry(
+    stop=stop_after_attempt(MAX_TRIES),
+    wait=wait_fixed(WAIT_SECONDS),
+)
+def _check_storage(log_fn: tp.Callable) -> bool:
+    """See if the storage system is alive."""
+    from app.crud.core import storage_ready
+
+    try:
+        log_fn('Attempting to contact storage system', depth=1)
+        result = storage_ready()
+        return result
+    except Exception as ex:
+        log_fn(ex, level=logging.WARN, depth=1)
+    return False
+
+
+@storage.command('check')
+@click.pass_context
+def storage_check(ctx: click.Context, **kwargs: str) -> tp.Optional[int]:
+    """
+    Check storage system is ready.
+    """
+    log = _get_log_fn()
+    log("Checking storage system")
+    result = _check_storage(log)
+
+    if result:
+        log("Storage ready")
+    else:
+        log("Storage not ready", level=logging.ERROR)
+    return 0 if result else 1
 
 
 # Entry-point

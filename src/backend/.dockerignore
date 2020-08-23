@@ -1,0 +1,6 @@
+# Env Files
+*.env
+
+# Python
+__pycache__
+*.sqlite3

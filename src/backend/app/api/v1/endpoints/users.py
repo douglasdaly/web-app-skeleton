@@ -75,7 +75,7 @@ async def create_user(
 @router.put("/me", response_model=schema.User)
 async def update_user_me(
     *,
-    name: schema.NameUpdate = Body(None),
+    name: tp.Union[schema.NameCreate, schema.NameUpdate] = Body(None),
     uow: IUnitOfWork = Depends(get_uow),
     current_user: models.User = Depends(get_current_active_user),
 ) -> models.User:

@@ -23,6 +23,8 @@ class AppModule extends VuexModule {
   };
   public device = DeviceType.Desktop;
 
+  public cookieNotify = cookies.getCookiesNotified() ? false : true;
+
   // Mutations
   @Mutation
   private SET_APP_TITLE(title?: string) {
@@ -42,6 +44,12 @@ class AppModule extends VuexModule {
   @Mutation
   private SET_DEVICE(device: DeviceType) {
     this.device = device;
+  }
+
+  @Mutation
+  private SET_COOKIE_NOTIFY(notify: boolean) {
+    this.cookieNotify = notify;
+    cookies.setCookiesNotified(!notify);
   }
 
   // Actions
@@ -77,6 +85,11 @@ class AppModule extends VuexModule {
         this.SET_DEVICE(DeviceType.Desktop);
       }
     }
+  }
+
+  @Action
+  public CookiesNotified() {
+    this.SET_COOKIE_NOTIFY(false);
   }
 
 }

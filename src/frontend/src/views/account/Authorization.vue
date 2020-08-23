@@ -24,7 +24,7 @@
               color="primary"
               v-bind="attrs"
               v-on="on"
-              @click="beginChanges"
+              @click="beginChanges()"
             >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
@@ -43,7 +43,7 @@
                 color="success"
                 v-bind="attrs"
                 v-on="on"
-                @click="saveChanges"
+                @click="saveChanges()"
               >
                 <v-icon>mdi-checkbox-marked-circle</v-icon>
               </v-btn>
@@ -61,7 +61,7 @@
                 color="error"
                 v-bind="attrs"
                 v-on="on"
-                @click="cancelChanges"
+                @click="cancelChanges()"
               >
                 <v-icon>mdi-close-circle</v-icon>
               </v-btn>
@@ -108,6 +108,7 @@
       <edit-user-auth
         ref="authForm"
         v-model="authUpdate"
+        is-child
         @submit="saveChanges()"
         @cancel="cancelChanges()"
       ></edit-user-auth>
@@ -178,7 +179,8 @@ export default class AccountAuthorization extends Vue {
   // Functions
   public validate() {
     (this.$refs.authForm as EditUserAuth).validate();
-    return this.valid && (this.$refs.authForm as EditUserAuth).valid;
+    this.valid = this.valid && (this.$refs.authForm as EditUserAuth).valid;
+    return this.valid;
   }
 
   private beginChanges() {

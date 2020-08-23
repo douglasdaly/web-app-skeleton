@@ -23,7 +23,7 @@
               color="primary"
               v-bind="attrs"
               v-on="on"
-              @click="beginChanges"
+              @click="beginChanges()"
             >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
@@ -42,7 +42,7 @@
                 color="success"
                 v-bind="attrs"
                 v-on="on"
-                @click="saveChanges"
+                @click="saveChanges()"
               >
                 <v-icon>mdi-checkbox-marked-circle</v-icon>
               </v-btn>
@@ -60,7 +60,7 @@
                 color="error"
                 v-bind="attrs"
                 v-on="on"
-                @click="cancelChanges"
+                @click="cancelChanges()"
               >
                 <v-icon>mdi-close-circle</v-icon>
               </v-btn>
@@ -80,6 +80,9 @@
     <edit-user v-else
       v-model="user"
       ref="form"
+      is-child
+      @submit="saveChanges()"
+      @cancel="cancelChanges()"
     ></edit-user>
 
   </v-card>
@@ -118,7 +121,7 @@ export default class AccountProfile extends Vue {
     this.loading = true;
     if ((this.$refs.form as EditUser).validate())
     {
-      await (this.$refs.form as EditUser).submit();
+      await (this.$refs.form as EditUser).submit(false);
       await AuthModule.GetUserInfo();
     }
     this.loading = false;

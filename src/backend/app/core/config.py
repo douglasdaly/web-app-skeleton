@@ -18,16 +18,17 @@ class Settings(BaseSettings):
     API application settings class
     """
     API_VERSION: str = "v1"
-    PROJECT_NAME: str
+    PROJECT_NAME: str = "Backend API"
 
     # - Environment
     DEBUG: bool = False
     LOG_LEVEL: str = "info"
 
     # - Server
-    SERVER_NAME: str
-    SERVER_HOST: AnyHttpUrl
-    SERVER_PORT: int
+    SERVER_NAME: str = "backend"
+    SERVER_HOST: str
+    SERVER_PORT: int = 3000
+    SERVER_PROTOCOL: str = "http"
 
     # - CRUD storage
     CRUD_DRIVER: str = "sqlalchemy"
@@ -69,6 +70,13 @@ class Settings(BaseSettings):
     SMTP_HOST: tp.Optional[str] = None
     SMTP_USER: tp.Optional[str] = None
     SMTP_PASSWORD: tp.Optional[str] = None
+
+    # Properties
+    @property
+    def SERVER_ADDR(self) -> str:
+        return (
+            f"{self.SERVER_PROTOCOL}://{self.SERVER_HOST}:{self.SERVER_PORT}"
+        )
 
     # Validators
     @validator("BACKEND_CORS_ORIGINS", pre=True)

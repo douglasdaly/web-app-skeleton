@@ -4,9 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+app = {editable = true, path = "."}
 coverage = "*"
 flake8 = "*"
 mypy = "*"
+psycopg2-binary = "*"
 pytest-cov = "*"
 pytest-mypy = "*"
 pytest-xdist = "*"
@@ -15,14 +17,13 @@ sphinx-rtd-theme = "*"
 sqlalchemy-stubs = "*"
 
 [packages]
-app = {editable = true, path = "."}
-alembic = "*"
+click = "*"
 email-validator = "*"
 emails = "*"
-fastapi = "*"
+fastapi = "==0.60.1"
+gunicorn = "*"
 orjson = "*"
 passlib = {extras = ["bcrypt"],version = "*"}
-psycopg2-binary = "*"
 pydantic = "*"
 pytest = "*"
 python-dotenv = "*"
@@ -32,7 +33,6 @@ requests = "*"
 sqlalchemy = "*"
 tenacity = "*"
 uvicorn = "*"
-click = "*"
 
 [requires]
 python_version = "3.8"

@@ -32,10 +32,11 @@ REQUIRES = [
     "python-multipart",
     "sqlalchemy",
     "tenacity",
+    "uvicorn",
 ]
 
 EXTRAS_REQUIRE = {
-    "Postgres": ["psycopg2-binary"],
+    "postgres": ["psycopg2-binary"],
 }
 
 ENTRY_POINTS = {

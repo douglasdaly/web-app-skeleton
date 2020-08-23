@@ -1,0 +1,52 @@
+version: "3.3"
+
+services:
+
+  proxy:
+    image: traefik:v2.2
+    command:
+      # Enable Docker
+      - --providers.docker
+      # Do not expose all Docker services, only the ones explicitly exposed
+      - --providers.docker.exposedbydefault=false
+      # Traefik API & Dashboard
+      - --api
+      # Enable Traefik logging
+      - --log
+      - --accesslog
+      # Debug settings
+      - --api.insecure=true
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  backend:
+    image: '${APP_SLUG}-backend:${TAG-latest}'
+    env_file:
+      - .env
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=80
+    build:
+      context: ./src/backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${APP_SLUG}-backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.services.${APP_SLUG}-backend.loadbalancer.server.port=80"
+
+  frontend:
+    image: '${APP_SLUG}-frontend:${TAG-latest}'
+    env_file:
+      - .env
+    build:
+      context: ./src/frontend
+      args:
+        - VUE_APP_NAME=${APP_NAME-frontend}
+        - VUE_APP_API_DOMAIN=${DOMAIN-localhost}
+        - VUE_APP_API_PROTOCOL=${VUE_APP_API_PROTOCOL-http}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${APP_SLUG}-frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.services.${APP_SLUG}-frontend.loadbalancer.server.port=80"

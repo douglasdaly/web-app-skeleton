@@ -12,6 +12,9 @@
       <slot></slot>
     </app-main>
 
+    <!-- Cookie notification -->
+    <cookie-notification></cookie-notification>
+
     <!-- Footer -->
     <footer-bar></footer-bar>
 
@@ -21,12 +24,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import { appName } from '@/env';
-import AppModule from '@/store/modules/app';
-import AuthModule from '@/store/modules/auth';
-
 import AppBar from './components/AppBar.vue';
 import AppMain from './components/AppMain.vue';
+import CookieNotification from './components/CookieNotification.vue';
 import FooterBar from './components/FooterBar.vue';
 import NavDrawer from './components/NavDrawer.vue';
 
@@ -35,6 +35,7 @@ import NavDrawer from './components/NavDrawer.vue';
   components: {
     AppBar,
     AppMain,
+    CookieNotification,
     FooterBar,
     NavDrawer,
   }

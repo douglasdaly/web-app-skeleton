@@ -2,7 +2,6 @@
   <v-form
     ref="form"
     v-model="valid"
-    @keydown.esc="$emit('cancel')"
   >
     <v-container fluid>
       <v-row>
@@ -12,7 +11,8 @@
             :rules="emailRules"
             label="New Email"
             required
-            @keydown.enter="$emit('submit')"
+            @keydown.enter="submit()"
+            @keydown.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -25,6 +25,7 @@
             :type="showPassword1 ? 'text' : 'password'"
             label="New Password"
             @click:append="showPassword1 = !showPassword1"
+            @keydown.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -38,7 +39,8 @@
             label="Confirm New Password"
             :required="creds.newPassword ? true : false"
             @click:append="showPassword2 = !showPassword2"
-            @keydown.enter="$emit('submit')"
+            @keydown.enter="submit()"
+            @keydown.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -47,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Vue } from 'vue-property-decorator';
+import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 
 export interface UserAuthUpdate {
   newEmail?: string;
@@ -57,6 +59,7 @@ export interface UserAuthUpdate {
 @Component
 export default class EditUserAuth extends Vue {
   @Model('change') private creds!: UserAuthUpdate;
+  @Prop([Boolean]) private isChild?: boolean;
 
   public valid = false;
   private confirmPassword = '';
@@ -91,6 +94,14 @@ export default class EditUserAuth extends Vue {
   // Functions
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
+    return this.valid;
+  }
+
+  public submit(isChild?: boolean) {
+    const child = isChild === false ? false : this.isChild;
+    if (child) {
+      this.$emit('submit');
+    }
   }
 
 }
