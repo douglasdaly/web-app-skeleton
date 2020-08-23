@@ -51,14 +51,14 @@
 <script lang="ts">
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 
-export interface UserAuthUpdate {
+export interface UserCredentialsUpdate {
   newEmail?: string;
   newPassword?: string;
 }
 
 @Component
-export default class EditUserAuth extends Vue {
-  @Model('change') private creds!: UserAuthUpdate;
+export default class EditUserCredentials extends Vue {
+  @Model('change') private creds!: UserCredentialsUpdate;
   @Prop([Boolean]) private isChild?: boolean;
 
   public valid = false;

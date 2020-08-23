@@ -3,22 +3,29 @@
     ref="form"
     v-model="valid"
   >
-    <v-container fluid>
-      <!-- Title -->
-      <v-row>
-        <v-col>
+    <v-list>
+
+      <!-- Name Title -->
+      <v-list-item>
+        <v-list-item-avatar v-if="showIcons">
+          <v-icon>mdi-account</v-icon>
+        </v-list-item-avatar>
+
+        <v-list-item-content>
           <v-text-field
             v-model="name.title"
             label="Title"
             @keyup.enter="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
-        </v-col>
-      </v-row>
+        </v-list-item-content>
+      </v-list-item>
 
       <!-- First Name -->
-      <v-row>
-        <v-col>
+      <v-list-item>
+        <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
+
+        <v-list-item-content>
           <v-text-field
             v-model="name.first"
             :rules="firstRules"
@@ -27,24 +34,28 @@
             @keyup.enter="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
-        </v-col>
-      </v-row>
+        </v-list-item-content>
+      </v-list-item>
 
       <!-- Middle Name -->
-      <v-row>
-        <v-col>
+      <v-list-item>
+        <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
+
+        <v-list-item-content>
           <v-text-field
             v-model="name.middle"
             label="Middle Name"
             @keyup.enter="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
-        </v-col>
-      </v-row>
+        </v-list-item-content>
+      </v-list-item>
 
       <!-- Last Name -->
-      <v-row>
-        <v-col>
+      <v-list-item>
+        <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
+
+        <v-list-item-content>
           <v-text-field
             v-model="name.last"
             :rules="lastRules"
@@ -53,47 +64,74 @@
             @keyup.enter="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
-        </v-col>
-      </v-row>
+        </v-list-item-content>
+      </v-list-item>
 
       <!-- Suffix -->
-      <v-row>
-        <v-col>
+      <v-list-item>
+        <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
+
+        <v-list-item-content>
           <v-text-field
             v-model="name.suffix"
             label="Suffix"
             @keyup.enter="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
-        </v-col>
-      </v-row>
+        </v-list-item-content>
+      </v-list-item>
 
       <!-- Preferred Name -->
-      <v-row>
-        <v-col>
+      <v-list-item>
+        <v-list-item-avatar v-if="showIcons"></v-list-item-avatar>
+
+        <v-list-item-content>
           <v-text-field
             v-model="name.preferred"
             label="Preferred Name"
             @keyup.enter="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
   </v-form>
 </template>
 
 <script lang="ts">
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 
-import { IName, INameUpdate } from '@/api/schema';
+import { INameCreate } from '@/api/schema';
+
+function createBlankName(): INameCreate {
+  return {
+    title: '',
+    first: '',
+    middle: '',
+    last: '',
+    suffix: '',
+    preferred: '',
+  };
+};
 
 @Component
-export default class EditName extends Vue {
-  @Model('change') private name!: INameUpdate;
+export default class CreateName extends Vue {
+  @Model('change', { default: () => createBlankName() }) private name!: INameCreate;
+  @Prop([String], { required: false }) private title?: string;
   @Prop([Boolean]) private isChild?: boolean;
+  @Prop({ default: true }) showIcons!: boolean;
 
   public valid = false;
+
+  // Hooks
+  mounted() {
+    this.name.title = this.name.title || '';
+    this.name.first = this.name.first || '';
+    this.name.middle = this.name.middle || '';
+    this.name.last = this.name.last || '';
+    this.name.suffix = this.name.suffix || '';
+    this.name.preferred = this.name.preferred || '';
+  }
 
   // Validation
   get firstRules() {
@@ -112,6 +150,11 @@ export default class EditName extends Vue {
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
     return this.valid;
+  }
+
+  public reset() {
+    (this.$refs.form as HTMLFormElement).reset();
+    this.valid = false;
   }
 
   public submit(isChild?: boolean) {

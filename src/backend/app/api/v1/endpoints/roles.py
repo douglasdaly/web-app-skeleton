@@ -10,6 +10,7 @@ from fastapi import (
     Body,
     Depends,
     HTTPException,
+    Query,
 )
 from fastapi.encoders import jsonable_encoder
 
@@ -50,8 +51,8 @@ async def read_role_by_id(
 async def read_roles(
     *,
     uow: IUnitOfWork = Depends(get_uow),
-    skip: int = 0,
-    limit: int = 100,
+    skip: int = Query(0),
+    limit: int = Query(100),
     current_user: models.User = Depends(get_current_active_admin),
 ) -> tp.List[models.Role]:
     """Gets all the roles specified."""

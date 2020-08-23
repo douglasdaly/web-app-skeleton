@@ -76,6 +76,7 @@
     <!-- Content -->
     <display-user v-if="!modify"
       v-model="user"
+      :show-email="false"
     ></display-user>
     <edit-user v-else
       v-model="user"

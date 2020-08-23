@@ -10,6 +10,7 @@ from fastapi import (
     Body,
     Depends,
     HTTPException,
+    Query,
 )
 from fastapi.encoders import jsonable_encoder
 from pydantic import EmailStr
@@ -35,8 +36,8 @@ router = APIRouter()
 async def read_users(
     *,
     uow: IUnitOfWork = Depends(get_uow),
-    skip: int = 0,
-    limit: int = 100,
+    skip: int = Query(0),
+    limit: int = Query(100),
     current_user: models.User = Depends(get_current_active_admin),
 ) -> tp.List[models.User]:
     """Gets all the users specified."""

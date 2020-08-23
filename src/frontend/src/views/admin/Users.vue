@@ -19,14 +19,21 @@
 
     <!-- Content -->
 
+    <users-table></users-table>
+
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+import UsersTable from '@/components/users/UsersTable.vue';
+
 @Component({
   name: 'AdminUsers',
+  components: {
+    UsersTable,
+  }
 })
 export default class AdminUsers extends Vue {
 };

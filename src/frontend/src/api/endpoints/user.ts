@@ -12,8 +12,8 @@ function getApiUrl(endpoint?: string): string {
 
 
 const api = {
-  async readUsers(): Promise<Array<IUser>> {
-    return request.get(getApiUrl());
+  async readUsers(skip?: number, limit?: number): Promise<Array<IUser>> {
+    return request.get(getApiUrl(), { params: { skip, limit } });
   },
 
   async readUserMe(): Promise<IUser> {

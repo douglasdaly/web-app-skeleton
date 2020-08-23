@@ -7,10 +7,10 @@
         <v-list-item-title
           class="headline"
         >
-          Authorization
+          Credentials
         </v-list-item-title>
         <v-list-item-subtitle>
-          Login credentials management
+          Account login credentials management
         </v-list-item-subtitle>
       </v-list-item-content>
 
@@ -133,22 +133,22 @@ import api from '@/api';
 import AuthModule from '@/store/modules/auth';
 
 import DisplayUserAuth from '@/components/auth/DisplayUserAuth.vue';
-import EditUserAuth, { UserAuthUpdate } from '@/components/auth/EditUserAuth.vue';
+import EditUserCredentials, { UserCredentialsUpdate } from '@/components/auth/EditUserCredentials.vue';
 
 @Component({
   name: 'AccountAuthorization',
   components: {
     DisplayUserAuth,
-    EditUserAuth,
+    EditUserCredentials,
   }
 })
-export default class AccountAuthorization extends Vue {
+export default class AccountCredentials extends Vue {
   private loading = false;
   private modify = false;
 
   private valid = false;
   private password = '';
-  private authUpdate: UserAuthUpdate = {
+  private authUpdate: UserCredentialsUpdate = {
     newEmail: '',
     newPassword: '',
   };
@@ -178,8 +178,8 @@ export default class AccountAuthorization extends Vue {
 
   // Functions
   public validate() {
-    (this.$refs.authForm as EditUserAuth).validate();
-    this.valid = this.valid && (this.$refs.authForm as EditUserAuth).valid;
+    (this.$refs.authForm as EditUserCredentials).validate();
+    this.valid = this.valid && (this.$refs.authForm as EditUserCredentials).valid;
     return this.valid;
   }
 
