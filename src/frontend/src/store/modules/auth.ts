@@ -13,6 +13,8 @@ import store from '@/store';
 import { getLocalToken, saveLocalToken, removeLocalToken } from '@/utils/local';
 import { getToken, removeToken, setToken } from '@/utils/cookies';
 
+import AppModule from './app';
+
 @Module({ name: 'auth', dynamic: true, store })
 class AuthModule extends VuexModule {
   public token: string = getLocalToken() || getToken() || '';
@@ -77,6 +79,9 @@ class AuthModule extends VuexModule {
       this.SET_LOGGED_IN(loggedIn);
       this.SET_LOGIN_ERROR(false);
       this.SET_USER(user);
+      if (loggedIn) {
+        AppModule.CookiesNotified();
+      }
       return loggedIn;
     }
     return false;
@@ -94,6 +99,7 @@ class AuthModule extends VuexModule {
       if (accessToken) {
         this.SET_TOKEN(accessToken);
         loggedIn = true;
+        AppModule.CookiesNotified();
         await this.GetUserInfo();
       }
     } catch (err) {
