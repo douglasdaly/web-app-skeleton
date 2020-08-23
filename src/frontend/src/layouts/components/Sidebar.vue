@@ -37,8 +37,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
 
-import RoutesModule from '@/store/modules/routes';
-
 @Component
 export default class Sidebar extends Vue {
   @Prop() readonly title?: string;

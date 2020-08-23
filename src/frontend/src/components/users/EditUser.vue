@@ -3,15 +3,17 @@
     <edit-name
       ref="nameForm"
       v-model="nameUpdate"
+      @submit="$emit('submit')"
+      @cancel="$emit('cancel')"
     ></edit-name>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Model, PropSync, Vue } from 'vue-property-decorator';
+import { Component, Model, Vue } from 'vue-property-decorator';
 
 import api from '@/api';
-import { IUser, IUserUpdate, INameUpdate, IName } from '@/api/schema';
+import { IUser, INameUpdate } from '@/api/schema';
 import EditName from '@/components/names/EditName.vue';
 
 @Component({

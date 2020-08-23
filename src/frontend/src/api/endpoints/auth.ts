@@ -1,4 +1,4 @@
-import { IMsg, IToken, IUser, IUserUpdate } from '../schema';
+import { IMsg, IToken, IUser } from '../schema';
 import request from '@/utils/request';
 
 const api = {

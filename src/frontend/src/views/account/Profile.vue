@@ -80,6 +80,8 @@
     <edit-user v-else
       v-model="user"
       ref="form"
+      @submit="saveChanges"
+      @cancel="cancelChanges"
     ></edit-user>
 
   </v-card>

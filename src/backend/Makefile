@@ -16,7 +16,7 @@ PYTEST_CORES ?= auto
 
 # - Directories
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-SUBDIR_ROOTS := alembic app scripts tests
+SUBDIR_ROOTS := app scripts
 DIRS := . $(shell find $(SUBDIR_ROOTS) -type d)
 GARBAGE_PATTERNS := *.pyc *~ *-checkpoint.ipynb *.egg-info __pycache__/
 GARBAGE := $(foreach DIR,$(DIRS),$(addprefix $(DIR)/,$(GARBAGE_PATTERNS)))
@@ -107,6 +107,14 @@ teardown-venv:  ### Removes the Python virtual environment.
 clean: clean  ## Cleans up unnecessary Python files.
 	rm -rf $(GARBAGE)
 
+# - Updating requirements
+.PHONY: requirements-update
+requirements-update:  ### Updates the requirements.txt file
+ifeq ($(PKG_MGR), pipenv)
+	rm requirements.txt
+	pipenv lock -r > requirements.txt
+endif
+
 # Unit testing
 .PHONY: test
 test:  ## Runs the Python unit tests.
@@ -132,16 +140,6 @@ mypy:  ## Runs MyPy type checking.
 debug:  ## Runs the application for debugging.
 	@printf '\033[36m%s\033[0m\n' 'STARTING BACKEND FOR DEBUGGING'
 	$(RUN_UVICORN) app.main:app --debug --reload --port=$(SERVER_PORT)
-
-# Storage
-# - Alembic
-.PHONY: alembic-upgrade
-alembic-upgrade:
-	$(RUN_ALEMBIC) upgrade head
-
-.PHONY: alembic-revise
-alembic-revise:
-	$(RUN_ALEMBIC) revision
 
 # Misc.
 .PHONY: cloc

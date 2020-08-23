@@ -9,6 +9,8 @@
           <v-text-field
             v-model="name.title"
             label="Title"
+            @keyup.enter="$emit('submit')"
+            @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -19,6 +21,8 @@
             :rules="firstRules"
             label="First Name"
             required
+            @keyup.enter="$emit('submit')"
+            @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -27,6 +31,8 @@
           <v-text-field
             v-model="name.middle"
             label="Middle Name"
+            @keyup.enter="$emit('submit')"
+            @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -37,6 +43,18 @@
             :rules="lastRules"
             label="Last Name"
             required
+            @keyup.enter="$emit('submit')"
+            @keyup.esc="$emit('cancel')"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-text-field
+            v-model="name.preferred"
+            label="Preferred Name"
+            @keyup.enter="$emit('submit')"
+            @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -45,6 +63,8 @@
           <v-text-field
             v-model="name.suffix"
             label="Suffix"
+            @keyup.enter="$emit('submit')"
+            @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-col>
       </v-row>

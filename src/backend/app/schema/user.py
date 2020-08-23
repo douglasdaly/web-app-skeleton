@@ -48,7 +48,7 @@ class UserUpdate(UserBase):
     is_active: tp.Optional[bool] = None
     is_superuser: tp.Optional[bool] = None
     is_admin: tp.Optional[bool] = None
-    name: tp.Optional[NameUpdate] = None
+    name: tp.Optional[tp.Union[NameCreate, NameUpdate]] = None
     roles: tp.Optional[tp.List[str]] = None
 
 

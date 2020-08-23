@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 import AppModule from '@/store/modules/app';
 import AuthModule from '@/store/modules/auth';
@@ -87,7 +87,7 @@ export default class AppBar extends Vue {
 
   public async logout() {
     this.loading = true;
-    const msg = await AuthModule.Logout();
+    await AuthModule.Logout();
     this.loading = false;
     this.$router.push('/');
   }
