@@ -117,7 +117,7 @@ function createBlankName(): INameCreate {
 @Component
 export default class CreateName extends Vue {
   @Model('change', { default: () => createBlankName() }) private name!: INameCreate;
-  @Prop([String], { required: false }) private title?: string;
+  @Prop([String]) private title?: string;
   @Prop([Boolean]) private isChild?: boolean;
   @Prop({ default: true }) showIcons!: boolean;
 

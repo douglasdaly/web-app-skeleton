@@ -131,6 +131,7 @@ export default class ListItemActions extends Vue {
   get collapsed(): boolean {
     if (this.collapseState === null)
     {
+      // @ts-ignore: Not recognizing $vuetify object on Vue instances
       return this.$vuetify.breakpoint[this.breakpoint];
     } else {
       return this.collapseState;

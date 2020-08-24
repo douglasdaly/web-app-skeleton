@@ -17,7 +17,6 @@
         >
           <!-- Column selection dropdown -->
           <v-menu
-            dark
             dense
             bottom
             offset-y
@@ -58,7 +57,6 @@
           <!-- New User Button -->
           <v-btn
             color="primary"
-            dark
             :disabled="detailsDialog || editDialog || deleteDialog"
             @click="newDialog = true"
           >
@@ -146,7 +144,6 @@
           can-edit
           can-delete
           open-on-hover
-          dark
           @item-view="showUser(item.uid)"
           @item-edit="editUser(item.uid)"
           @item-delete="deleteUser(item.uid)"
@@ -158,8 +155,8 @@
     <!-- New User Dialog -->
     <v-dialog
       v-model="newDialog"
+      persistent
       max-width="650px"
-      dark
     >
       <create-user-full
         @cancel="newDialog = false"
@@ -173,7 +170,6 @@
     >
       <display-user-detailed v-if="selectedUser"
         v-model="selectedUser"
-        dark
         show-actions
         @cancel="detailsDialog = false"
       ></display-user-detailed>

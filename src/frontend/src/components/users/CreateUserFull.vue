@@ -31,7 +31,6 @@
     >
       <v-stepper
         v-model="newUserStep"
-        dark
       >
         <v-stepper-header>
           <v-stepper-step
