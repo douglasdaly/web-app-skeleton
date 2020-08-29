@@ -37,6 +37,10 @@ class Repository(tp.Protocol[ModelType]):
     ) -> None:
         ...
 
+    @property
+    def count(self) -> int:
+        ...
+
     def get(self, uid: UUID) -> ModelType:
         ...
 
@@ -58,7 +62,7 @@ class Repository(tp.Protocol[ModelType]):
     ) -> ModelType:
         ...
 
-    def remove(self, uid: UUID) -> ModelType:
+    def remove(self, uid: UUID) -> None:
         ...
 
 
@@ -92,6 +96,12 @@ class RepositoryBase(
     def _make(self, *args: tp.Any, **kwargs: tp.Any) -> ModelType:
         """Constructs a new object from the given data."""
         return self.model(*args, **kwargs)
+
+    @property
+    @abstractmethod
+    def count(self) -> int:
+        """Gets the number of items in this repository."""
+        pass
 
     @abstractmethod
     def _save(self, obj: ModelType) -> ModelType:
@@ -220,18 +230,13 @@ class RepositoryBase(
                 setattr(obj, field, data[field])
         return obj
 
-    def remove(self, uid: UUID) -> ModelType:
+    def remove(self, uid: UUID) -> None:
         """Removes the specified object from storage.
 
         Parameters
         ----------
         uid : UUID
             The unique ID of the object to remove from storage.
-
-        Returns
-        -------
-        ModelType
-            The removed object.
 
         Raises
         ------
@@ -242,4 +247,4 @@ class RepositoryBase(
         obj = self.get(uid)
         if obj is None:
             raise ValueError(f"No {self.model.__name__} with uid: {uid}")
-        return self._delete(obj)
+        self._delete(obj)

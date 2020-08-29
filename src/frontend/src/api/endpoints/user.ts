@@ -12,6 +12,10 @@ function getApiUrl(endpoint?: string): string {
 
 
 const api = {
+  async readUserCount(): Promise<number> {
+    return request.get(getApiUrl('count'));
+  },
+
   async readUsers(skip?: number, limit?: number): Promise<Array<IUser>> {
     return request.get(getApiUrl(), { params: { skip, limit } });
   },
@@ -43,6 +47,10 @@ const api = {
 
   async updateUserMe(name: INameUpdate): Promise<IUser> {
     return request.put(getApiUrl('me'), { ...name });
+  },
+
+  async removeUser(userId: string): Promise<null> {
+    return request.delete(getApiUrl(userId));
   },
 
 };

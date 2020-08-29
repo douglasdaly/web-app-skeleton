@@ -93,6 +93,11 @@ ifeq ($(SEPARATE_REQS), 1)
 	$(VENV_ACTIVATE) && $(VENV_REQUIREMENTS) && $(VENV_DEACTIVATE)
 endif
 
+.PHONY: setup-ipykernel
+setup-ipykernel:  ### Sets up an IPython kernel for the environment.
+	@printf '\033[36m%s\033[0m\n' 'CREATING IPYTHON KERNEL'
+	$(RUN_PYTHON) -m ipykernel install --user --name=web-app-backend --display-name="Web App Backend"
+
 # - Teardown
 .PHONY: teardown
 teardown: teardown-venv  ## Tears down the development environment.
@@ -102,6 +107,11 @@ teardown-venv:  ### Removes the Python virtual environment.
 	@printf '\033[36m%s\033[0m\n' 'REMOVING PYTHON ENVIRONMENT'
 	$(VENV_REMOVE)
 
+.PHONY: teardown-ipykernel
+teardown-ipykernel:  ### Removes the environment's IPython kernel.
+	@printf '\033[36m%s\033[0m\n' 'REMOVING IPYTHON KERNEL'
+	jupyter kernelspec remove --f web-app-backend
+	
 # - Cleaning
 .PHONY: clean
 clean: clean  ## Cleans up unnecessary Python files.

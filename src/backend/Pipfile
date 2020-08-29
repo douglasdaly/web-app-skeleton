@@ -7,6 +7,7 @@ verify_ssl = true
 app = {editable = true, path = "."}
 coverage = "*"
 flake8 = "*"
+ipykernel = "*"
 mypy = "*"
 psycopg2-binary = "*"
 pytest-cov = "*"

@@ -4,17 +4,44 @@
       :loading="loading"
       :headers="headers"
       :items="items"
+      :page.sync="page"
+      :items-per-page.sync="limit"
+      :server-items-length="totalUserCount"
       sort-by="email"
       :show-select="showSelect"
       :single-select="singleSelect"
       :dense="dense"
       :search="search"
       class="elevation-1"
+      :footer-props="{
+        itemsPerPageOptions: [10, 25, 100, -1],
+      }"
+      @update:items-per-page="update()"
+      @update:page="update()"
     >
       <template v-slot:top>
         <v-toolbar
           flat
         >
+          <!-- New User Button -->
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }" left>
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                fab
+                x-small
+                dark
+                color="primary"
+                :disabled="detailsDialog || editDialog || deleteDialog"
+                @click="newDialog = true"
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+            <span>Add New User</span>
+          </v-tooltip>
+
           <!-- Column selection dropdown -->
           <v-menu
             dense
@@ -27,7 +54,9 @@
                   <v-btn
                     v-bind="attrs"
                     v-on="{ ...tooltip, ...menu }"
+                    class="ml-2"
                     icon
+                    small
                   >
                     <v-icon>mdi-format-list-checkbox</v-icon>
                   </v-btn>
@@ -43,25 +72,18 @@
             ></multi-check-list>
           </v-menu>
 
+          <v-spacer></v-spacer>
+
           <!-- Search -->
           <v-text-field
             v-model="search"
+            class="ml-2"
             hide-details
             label="Search"
-            append-icon="mdi-magnify"
+            prepend-icon="mdi-magnify"
             single-line
           ></v-text-field>
 
-          <v-spacer></v-spacer>
-
-          <!-- New User Button -->
-          <v-btn
-            color="primary"
-            :disabled="detailsDialog || editDialog || deleteDialog"
-            @click="newDialog = true"
-          >
-            <span class="ml-1">New User</span>
-          </v-btn>
         </v-toolbar>
       </template>
 
@@ -142,11 +164,11 @@
           v-model="showActions"
           can-view
           can-edit
-          can-delete
+          :can-delete="canDelete(item.uid)"
           open-on-hover
           @item-view="showUser(item.uid)"
           @item-edit="editUser(item.uid)"
-          @item-delete="deleteUser(item.uid)"
+          @item-delete="startDeleteUser(item.uid)"
         ></list-item-actions>
       </template>
 
@@ -176,8 +198,60 @@
     </v-dialog>
 
     <!-- Edit Dialog -->
+    <v-dialog v-model="editDialog"
+      max-width="650px"
+    >
+      <v-card></v-card>
+    </v-dialog>
 
     <!-- Delete Dialog -->
+    <v-dialog v-model="deleteDialog"
+      max-width="450px"
+    >
+      <display-user-detailed
+        v-model="selectedUser"
+        hide-profile
+        dark
+      >
+        <template v-slot:title>
+          <v-card-title>
+            <v-icon
+              large
+              color="warning"
+            >
+              mdi-alert
+            </v-icon>
+            <span class="headline ml-2">Confirm Delete</span>
+          </v-card-title>
+        </template>
+
+        <template v-slot:default>
+          <v-card-text class="subtitle-1 pt-2 pb-0">
+            Are you sure you want to delete this user?
+          </v-card-text>
+        </template>
+
+        <template v-slot:actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            dark
+            color="error"
+            @click="deleteUser(selectedUser.uid)"
+          >
+            <v-icon>mdi-delete</v-icon> Delete
+          </v-btn>
+
+          <v-btn
+            dark
+            color="secondary"
+            @click="cancelDeleteUser()"
+          >
+            Cancel
+          </v-btn>
+        </template>
+      </display-user-detailed>
+    </v-dialog>
 
   </div>
 </template>
@@ -187,6 +261,9 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 import api from '@/api';
 import { IUser } from '@/api/schema';
+import AuthModule from '@/store/modules/auth';
+
+import { delayCall } from '@/utils/delayed';
 
 import CreateUserFull from './CreateUserFull.vue';
 import DisplayUser from './DisplayUser.vue';
@@ -227,12 +304,12 @@ export default class UsersTable extends Vue {
   @Prop({ required: false }) private showColumns?: string[];
   @Prop({ default: () => [ 'isAdmin', 'isSuperuser' ] }) private unselectedColumns!: string[];
   @Prop({ default: () => [ 'email', 'actions' ] }) private fixedColumns!: string[];
-
   @Prop([Boolean]) private dense?: boolean;
   @Prop([Boolean]) private showSelect?: boolean;
   @Prop([Boolean]) private singleSelect?: boolean;
 
-  private loading = true;
+  private loading = false;
+  private totalUserCount = -1;
 
   private search = '';
   private selectedColumns: string[] = [];
@@ -246,8 +323,8 @@ export default class UsersTable extends Vue {
 
   private selectedUser: IUser | null = null;
   private users: IUser[] = [];
-  private page = 0;
-  private limit = 20;
+  private page = 1;
+  private limit = 25;
 
   private allHeaders: ListHeader[] = [
     {
@@ -300,6 +377,10 @@ export default class UsersTable extends Vue {
   }
 
   // Computed
+  get currentUser(): IUser | null {
+    return AuthModule.user;
+  }
+
   get showActions(): boolean | null {
     return this.selectedColumns.length > 4 ? null : true;
   }
@@ -359,17 +440,27 @@ export default class UsersTable extends Vue {
   }
 
   // Functions
+  // - Check if can delete
+  private canDelete(userId: string): boolean {
+    if (this.currentUser) {
+      return this.currentUser.uid !== userId;
+    }
+    return false;
+  }
+
   // - Get data from database
   public async update() {
-    this.loading = true;
+    const loadWait = delayCall(500, () => { this.loading = true; });
     this.newDialog = false;
     this.editDialog = false;
     this.detailsDialog = false;
     this.deleteDialog = false;
     this.users = [];
-    const skip = this.page * this.limit;
-    await api.user.readUsers(skip, this.limit)
+    this.totalUserCount = await api.user.readUserCount();
+    const skip = (this.page - 1) * this.limit;
+    await api.user.readUsers(skip, this.limit > 0 ? this.limit : undefined)
       .then(res => res.forEach((user) => this.users.push(user)));
+    loadWait.cancel();
     this.loading = false;
   }
 
@@ -385,8 +476,28 @@ export default class UsersTable extends Vue {
     console.log(userId);
   }
 
-  public deleteUser(userId: string) {
-    console.log(userId);
+  // -- Delete
+  public async startDeleteUser(userId: string) {
+    this.dialogLoading = true;
+    this.deleteDialog = true;
+    this.selectedUser = await api.user.readUserById(userId);
+    this.dialogLoading = false;
+  }
+
+  public async deleteUser(userId: string) {
+    this.loading = true;
+    this.dialogLoading = true;
+    await api.user.removeUser(userId);
+    this.dialogLoading = false;
+    this.deleteDialog = false;
+    this.selectedUser = null;
+    await this.update();
+    this.loading = false;
+  }
+
+  public cancelDeleteUser() {
+    this.deleteDialog = false;
+    this.selectedUser = null;
   }
 }
 </script>

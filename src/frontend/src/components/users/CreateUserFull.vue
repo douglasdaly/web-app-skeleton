@@ -103,6 +103,7 @@
               v-model="user"
               title="Confirm User Information"
               class="pa-0 ma-0"
+              hide-actions
             ></display-user-detailed>
           </v-stepper-content>
 

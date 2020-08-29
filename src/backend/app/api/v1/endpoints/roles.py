@@ -52,7 +52,7 @@ async def read_roles(
     *,
     uow: IUnitOfWork = Depends(get_uow),
     skip: int = Query(0),
-    limit: int = Query(100),
+    limit: tp.Optional[int] = Query(None),
     current_user: models.User = Depends(get_current_active_admin),
 ) -> tp.List[models.Role]:
     """Gets all the roles specified."""

@@ -37,7 +37,7 @@ async def read_users(
     *,
     uow: IUnitOfWork = Depends(get_uow),
     skip: int = Query(0),
-    limit: int = Query(100),
+    limit: tp.Optional[int] = Query(None),
     current_user: models.User = Depends(get_current_active_admin),
 ) -> tp.List[models.User]:
     """Gets all the users specified."""
@@ -127,6 +127,16 @@ async def create_user_open(
     return user
 
 
+@router.get("/count", response_model=int)
+async def read_user_count(
+    *,
+    uow: IUnitOfWork = Depends(get_uow),
+    current_user: models.User = Depends(get_current_active_admin),
+) -> int:
+    """Gets the total count of user objects in the system."""
+    return uow.user.count
+
+
 @router.get("/{user_id}", response_model=schema.User)
 async def read_user_by_id(
     user_id: UUID,
@@ -169,3 +179,27 @@ async def update_user(
     with uow:
         user = uow.user.update(obj=user, obj_in=user_in)
     return user
+
+
+@router.delete("/{user_id}")
+async def delete_user(
+    user_id: UUID,
+    *,
+    uow: IUnitOfWork = Depends(get_uow),
+    current_user: models.User = Depends(get_current_active_admin),
+) -> None:
+    """Delete's a user from the system."""
+    user = uow.user.get(user_id)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this ID doesn't exist",
+        )
+    if user.uid == current_user.uid:
+        raise HTTPException(
+            status_code=400,
+            detail="You cannot delete yourself",
+        )
+    with uow:
+        uow.user.remove(user_id)
+    return
