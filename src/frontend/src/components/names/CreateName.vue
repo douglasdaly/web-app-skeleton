@@ -15,7 +15,7 @@
           <v-text-field
             v-model="name.title"
             label="Title"
-            @keyup.enter="submit()"
+            @keyup.enter.stop="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-list-item-content>
@@ -27,11 +27,12 @@
 
         <v-list-item-content>
           <v-text-field
+            ref="firstField"
             v-model="name.first"
             :rules="firstRules"
             label="First Name"
             required
-            @keyup.enter="submit()"
+            @keyup.enter.stop="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-list-item-content>
@@ -45,7 +46,7 @@
           <v-text-field
             v-model="name.middle"
             label="Middle Name"
-            @keyup.enter="submit()"
+            @keyup.enter.stop="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-list-item-content>
@@ -61,7 +62,7 @@
             :rules="lastRules"
             label="Last Name"
             required
-            @keyup.enter="submit()"
+            @keyup.enter.stop="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-list-item-content>
@@ -75,7 +76,7 @@
           <v-text-field
             v-model="name.suffix"
             label="Suffix"
-            @keyup.enter="submit()"
+            @keyup.enter.stop="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-list-item-content>
@@ -89,7 +90,7 @@
           <v-text-field
             v-model="name.preferred"
             label="Preferred Name"
-            @keyup.enter="submit()"
+            @keyup.enter.stop="submit()"
             @keyup.esc="$emit('cancel')"
           ></v-text-field>
         </v-list-item-content>
@@ -131,6 +132,8 @@ export default class CreateName extends Vue {
     this.name.last = this.name.last || '';
     this.name.suffix = this.name.suffix || '';
     this.name.preferred = this.name.preferred || '';
+
+    this.focus();
   }
 
   // Validation
@@ -147,6 +150,12 @@ export default class CreateName extends Vue {
   }
 
   // Functions
+  public focus() {
+    this.$nextTick(() => {
+      (this.$refs.firstField as HTMLFormElement).focus();
+    });
+  }
+
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
     return this.valid;

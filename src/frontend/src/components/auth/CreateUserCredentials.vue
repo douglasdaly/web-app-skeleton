@@ -12,6 +12,7 @@
 
         <v-list-item-content>
           <v-text-field
+            ref="emailField"
             v-model="user.email"
             :rules="emailRules"
             label="Email"
@@ -31,13 +32,23 @@
           <v-text-field
             v-model="user.password"
             :rules="passwordRules"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :type="showPassword ? 'text' : 'password'"
             label="New Password"
             required
             @click:append="showPassword = !showPassword"
             @keydown.esc="$emit('cancel')"
-          ></v-text-field>
+          >
+            <template v-slot:append>
+              <v-btn
+                icon
+                tabindex="-1"
+                @click="showPassword = !showPassword"
+              >
+                <v-icon v-if="showPassword">mdi-eye</v-icon>
+                <v-icon v-else>mdi-eye-off</v-icon>
+              </v-btn>
+            </template>
+          </v-text-field>
         </v-list-item-content>
       </v-list-item>
 
@@ -49,13 +60,23 @@
           <v-text-field
             v-model="confirmPassword"
             :rules="confirmRules"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :type="showPassword ? 'text' : 'password'"
             label="Confirm New Password"
             required
-            @keydown.enter="submit()"
-            @keydown.esc="$emit('cancel')"
-          ></v-text-field>
+            @keyup.enter.stop="submit()"
+            @keyup.esc="$emit('cancel')"
+          >
+            <template v-slot:append>
+              <v-btn
+                icon
+                tabindex="-1"
+                @click="showPassword = !showPassword"
+              >
+                <v-icon v-if="showPassword">mdi-eye</v-icon>
+                <v-icon v-else>mdi-eye-off</v-icon>
+              </v-btn>
+            </template>
+          </v-text-field>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -78,6 +99,11 @@ export default class CreateUserCredentials extends Vue {
   private confirmPassword = '';
   private showPassword = false;
 
+  // Hooks
+  mounted() {
+    this.focus();
+  }
+
   // Validation
   get emailRules() {
     return [
@@ -99,6 +125,12 @@ export default class CreateUserCredentials extends Vue {
   }
 
   // Functions
+  public focus() {
+    this.$nextTick(() => {
+      (this.$refs.emailField as HTMLFormElement).focus();
+    });
+  }
+
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
     return this.valid;

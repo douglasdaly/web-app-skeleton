@@ -72,9 +72,10 @@
           <!-- Create login credentials -->
           <v-stepper-content step="1">
             <create-user-credentials
-              :ref="`formStep1`"
+              ref="formStep1"
               v-model="user"
               is-child
+              @submit="newUserNextStep()"
             ></create-user-credentials>
           </v-stepper-content>
 
@@ -84,6 +85,7 @@
               ref="formStep2"
               v-model="user"
               is-child
+              @submit="newUserNextStep()"
             ></modify-user-permissions>
           </v-stepper-content>
 
@@ -94,12 +96,14 @@
               ref="formStep3"
               v-model="user.name"
               is-child
+              @submit="newUserNextStep()"
             ></create-name>
           </v-stepper-content>
 
           <!-- Confirm all data -->
           <v-stepper-content step="4">
             <display-user-detailed
+              ref="formStep4"
               v-model="user"
               title="Confirm User Information"
               class="pa-0 ma-0"
@@ -115,14 +119,16 @@
     <v-card-actions>
       <v-btn v-if="newUserStep <= 1"
         color="error"
-        @click="newUserPrevStep"
+        tabindex="-1"
+        @click="newUserPrevStep()"
       >
         Cancel
       </v-btn>
       <v-btn v-else
         color="secondary"
         :loading="loading"
-        @click="newUserPrevStep"
+        tabindex="-1"
+        @click="newUserPrevStep()"
       >
         &lt; Back
       </v-btn>
@@ -200,6 +206,9 @@ export default class CreateUserFull extends Vue {
       this.newUserStep += 1;
       if (this.newUserStep > 4) {
         await this.submit();
+      } else if (this.newUserStep < 4) {
+        const formRef = `formStep${this.newUserStep}`;
+        (this.$refs[formRef] as HTMLFormElement).focus();
       }
     }
   }
@@ -212,6 +221,7 @@ export default class CreateUserFull extends Vue {
     }
   }
 
+  // - Form methods
   public validate() {
     const ret = ((this.$refs.formStep1 as HTMLFormElement).validate())
       && ((this.$refs.formStep2 as HTMLFormElement).validate())

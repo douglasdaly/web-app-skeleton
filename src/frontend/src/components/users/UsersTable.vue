@@ -181,8 +181,9 @@
       max-width="650px"
     >
       <create-user-full
-        @cancel="newDialog = false"
-        @submit="update()"
+        ref="newUserForm"
+        @cancel="cancelCreateUser()"
+        @submit="createUser()"
       ></create-user-full>
     </v-dialog>
 
@@ -209,6 +210,7 @@
       max-width="450px"
     >
       <display-user-detailed
+        ref="deleteUserForm"
         v-model="selectedUser"
         hide-profile
         dark
@@ -465,6 +467,21 @@ export default class UsersTable extends Vue {
   }
 
   // - Table action functions
+  // -- New
+  public startCreateUser() {
+    this.newDialog = true;
+  }
+
+  public async createUser() {
+    this.newDialog = false;
+    await this.update();
+  }
+
+  public cancelCreateUser() {
+    this.newDialog = false;
+  }
+
+  // -- Display
   public async showUser(userId: string) {
     this.dialogLoading = true;
     this.detailsDialog = true;
@@ -472,8 +489,17 @@ export default class UsersTable extends Vue {
     this.dialogLoading = false;
   }
 
+  // -- Edit
+  public startEditUser() {
+    this.editDialog = true;
+  }
+
   public editUser(userId: string) {
     console.log(userId);
+  }
+
+  public cancelEditUser() {
+    this.editDialog = false;
   }
 
   // -- Delete

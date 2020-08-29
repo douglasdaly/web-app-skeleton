@@ -12,7 +12,8 @@
         <v-col>
           <v-row>
             <v-col>
-              <v-switch v-model="user.isActive"
+              <v-switch
+                v-model="user.isActive"
                 label="Is Active?"
                 prepend-icon="mdi-account-voice"
               ></v-switch>
@@ -37,6 +38,7 @@
       <v-row>
         <v-col>
           <v-select
+            ref="rolesSelect"
             v-model="user.roles"
             :loading="loading"
             :items="roles"
@@ -84,6 +86,13 @@ export default class ModifyUserPermissions extends Vue {
     const allRoles = await api.roles.readRoles()
     this.roles.push(...allRoles);
     this.loading = false;
+  }
+
+  // - Form
+  public focus() {
+    this.$nextTick(() => {
+      (this.$refs.rolesSelect as HTMLFormElement).focus();
+    });
   }
 
   public validate() {
