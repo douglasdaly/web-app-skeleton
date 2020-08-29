@@ -49,7 +49,7 @@ const api = {
     return request.put(getApiUrl('me'), { ...name });
   },
 
-  async removeUser(userId: string): Promise<null> {
+  async deleteUser(userId: string): Promise<null> {
     return request.delete(getApiUrl(userId));
   },
 

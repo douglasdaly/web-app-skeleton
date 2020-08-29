@@ -513,7 +513,7 @@ export default class UsersTable extends Vue {
   public async deleteUser(userId: string) {
     this.loading = true;
     this.dialogLoading = true;
-    await api.user.removeUser(userId);
+    await api.user.deleteUser(userId);
     this.dialogLoading = false;
     this.deleteDialog = false;
     this.selectedUser = null;

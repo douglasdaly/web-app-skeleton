@@ -47,6 +47,16 @@ async def read_role_by_id(
     return role
 
 
+@router.get("/count", response_model=int)
+async def read_role_count(
+    *,
+    uow: IUnitOfWork = Depends(get_uow),
+    current_user: models.User = Depends(get_current_active_admin),
+) -> int:
+    """Gets the total number of roles in the storage system."""
+    return uow.role.count
+
+
 @router.get("/", response_model=tp.List[schema.Role])
 async def read_roles(
     *,
@@ -91,3 +101,22 @@ async def update_role(
     with uow:
         role = uow.role.update(obj=role, obj_in=role_in)
     return role
+
+
+@router.delete("/{role_id}")
+async def delete_role(
+    role_id: UUID,
+    *,
+    uow: IUnitOfWork = Depends(get_uow),
+    current_user: models.User = Depends(get_current_active_admin),
+) -> None:
+    """Deletes the specified role from the system."""
+    role = uow.role.get(role_id)
+    if not role:
+        raise HTTPException(
+            status_code=404,
+            detail="The role with this ID doesn't exist",
+        )
+    with uow:
+        uow.role.remove(role_id)
+    return

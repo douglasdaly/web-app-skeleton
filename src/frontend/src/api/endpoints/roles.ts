@@ -15,6 +15,10 @@ const api = {
     return request.get(getApiUrl(roleId));
   },
 
+  async readRoleCount(): Promise<number> {
+    return request.get(getApiUrl('count'));
+  },
+
   async readRoles(skip?: number, limit?: number): Promise<Array<IRole>> {
     return request.get(getApiUrl(), { params: { skip, limit } });
   },
@@ -25,6 +29,10 @@ const api = {
 
   async updateRole(roleId: string, roleIn: IRoleUpdate): Promise<IRole> {
     return request.put(getApiUrl(roleId), roleIn);
+  },
+
+  async deleteRole(roleId: string): Promise<void> {
+    return request.delete(getApiUrl(roleId));
   },
 };
 
