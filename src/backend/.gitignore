@@ -140,3 +140,7 @@ dmypy.json
 
 # Databases
 *.sqlite3
+
+# Development jupyter notebooks
+notebooks/
+

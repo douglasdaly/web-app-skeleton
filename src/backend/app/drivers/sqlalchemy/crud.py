@@ -31,6 +31,10 @@ class SQLRepositoryMixin(object, metaclass=ABCMeta):
         model: tp.Type[Base]
         uow: 'UnitOfWork'
 
+    @property
+    def count(self) -> int:
+        return self.uow.db.query(self.model).count()
+
     def _save(self, obj: ModelTypeSQL) -> ModelTypeSQL:
         self.uow.db.add(obj)
         self.uow.db.flush()
@@ -41,10 +45,9 @@ class SQLRepositoryMixin(object, metaclass=ABCMeta):
             .filter(self.model.uid == uid) \
             .first()
 
-    def _delete(self, obj: ModelTypeSQL) -> ModelTypeSQL:
+    def _delete(self, obj: ModelTypeSQL) -> None:
         self.uow.db.delete(obj)
         self.uow.db.flush()
-        return obj
 
     def get_multi(
         self,

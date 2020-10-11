@@ -2,7 +2,6 @@
 """
 Core functionality for the SQLAlchemy storage driver.
 """
-from app.core.config import settings
 from app.drivers.sqlalchemy import (
     models,
     repos,
@@ -13,10 +12,7 @@ from app.drivers.sqlalchemy.session import (
     engine,
     SessionLocal,
 )
-from app.schema import (
-    RoleCreate,
-    UserCreate,
-)
+
 
 __all__ = [
     'create_uow',
@@ -37,8 +33,8 @@ def storage_ready() -> bool:
         Whether or not the storage system is ready for use.
 
     """
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         db.execute("SELECT 1")
         return True
     except Exception:
@@ -66,30 +62,6 @@ def create_uow() -> UnitOfWork:
 def setup_storage() -> None:
     """Sets up the storage system for the first time running."""
     Base.metadata.create_all(bind=engine)
-
-    uow = create_uow()
-    # - Make admin role
-    role = uow.role.get_by_name('admin')
-    if not role:
-        new_role = RoleCreate(
-            name="admin",
-            description="System administrator role.",
-        )
-        with uow:
-            role = uow.role.create(obj_in=new_role)
-
-    # - Make first admin
-    user = uow.user.get_by_email(settings.FIRST_ADMIN_USER)
-    if not user:
-        new_user = UserCreate(
-            email=settings.FIRST_ADMIN_USER,
-            password=settings.FIRST_ADMIN_PASSWORD,
-            is_superuser=True,
-            is_admin=True,
-            roles=[role.name],
-        )
-        with uow:
-            user = uow.user.create(obj_in=new_user)
 
 
 def init_storage() -> None:

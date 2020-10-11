@@ -6,19 +6,13 @@
       :showIcons="showIcons"
     ></display-name>
 
-    <v-list two-line>
-      <!-- Email -->
-      <v-list-item v-if="showEmail">
-        <v-list-item-icon v-if="showIcons">
-          <v-icon>mdi-email</v-icon>
-        </v-list-item-icon>
+    <!-- Email/Roles -->
+    <display-user-auth v-if="showEmail || showRoles"
+      v-model="user"
+      :show-email="showEmail"
+      :show-roles="showRoles"
+    ></display-user-auth>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ user.email }}</v-list-item-title>
-          <v-list-item-subtitle>Email</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
   </div>
 </template>
 
@@ -26,16 +20,19 @@
 import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 
 import { IUser } from '@/api/schema';
+import DisplayUserAuth from '@/components/auth/DisplayUserAuth.vue';
 import DisplayName from '@/components/names/DisplayName.vue';
 
 @Component({
   components: {
     DisplayName,
+    DisplayUserAuth,
   }
 })
 export default class DisplayUser extends Vue {
   @Model('change') private user!: IUser;
-  @Prop([Boolean]) private showEmail?: boolean;
+  @Prop({ default: true }) private showEmail!: boolean;
+  @Prop([Boolean]) private showRoles?: boolean;
   @Prop({ default: true }) private showIcons!: boolean;
 };
 </script>

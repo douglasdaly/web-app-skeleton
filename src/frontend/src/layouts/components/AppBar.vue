@@ -25,11 +25,15 @@
       </template>
 
       <v-list>
-        <v-list-item to="/account/index">
-            <v-list-item-title>My Account</v-list-item-title>
-            <v-list-item-action>
-            <v-icon dense>mdi-account-cog</v-icon>
-            </v-list-item-action>
+        <v-list-item v-for="(route, idx) in userRoutes"
+          :key="`${route.path}-${idx}`"
+          :to="route.path"
+        >
+          <v-list-item-title>{{ route.meta.title }}</v-list-item-title>
+
+          <v-list-item-action v-if="route.meta && route.meta.icon">
+            <v-icon dense>{{ route.meta.icon }}</v-icon>
+          </v-list-item-action>
         </v-list-item>
 
         <v-list-item
@@ -63,9 +67,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { RouteConfig } from 'vue-router';
 
 import AppModule from '@/store/modules/app';
 import AuthModule from '@/store/modules/auth';
+import RoutesModule from '@/store/modules/routes';
 
 @Component
 export default class AppBar extends Vue {
@@ -78,6 +84,18 @@ export default class AppBar extends Vue {
 
   get isLoggedIn(): boolean {
     return AuthModule.loggedIn;
+  }
+
+  get userRoutes(): RouteConfig[] {
+    const ret: RouteConfig[] = [];
+    if (this.isLoggedIn) {
+      RoutesModule.dynamicRoutes.forEach((route) => {
+        if (route.meta && route.meta.title) {
+          ret.push(route);
+        }
+      });
+    }
+    return ret;
   }
 
   // Functions

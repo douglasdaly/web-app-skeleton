@@ -164,11 +164,11 @@ def storage_setup(ctx: click.Context, **kwargs: str) -> tp.Optional[int]:
     """
     Setup the storage system.
     """
-    from app.crud.core import setup_storage
+    from app.crud.core import setup
 
     log = _get_log_fn()
     log("Setting up storage system")
-    setup_storage()
+    setup()
 
     return 0
 
@@ -179,11 +179,11 @@ def storage_setup(ctx: click.Context, **kwargs: str) -> tp.Optional[int]:
 )
 def _check_storage(log_fn: tp.Callable) -> bool:
     """See if the storage system is alive."""
-    from app.crud.core import storage_ready
+    from app.crud.core import ready
 
     try:
         log_fn('Attempting to contact storage system', depth=1)
-        result = storage_ready()
+        result = ready()
         return result
     except Exception as ex:
         log_fn(ex, level=logging.WARN, depth=1)

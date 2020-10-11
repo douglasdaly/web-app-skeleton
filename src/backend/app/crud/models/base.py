@@ -23,3 +23,6 @@ class ModelBase(object):
     def __init__(self, *args: tp.Any, **kwargs: tp.Any) -> None:
         self.uid: tp.Optional[UUID] = kwargs.pop('uid', None)
         return super().__init__()
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(uid={self.uid!r})"

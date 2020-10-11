@@ -4,6 +4,7 @@
     v-model="valid"
   >
     <v-container fluid>
+      <!-- Title -->
       <v-row>
         <v-col>
           <v-text-field
@@ -14,6 +15,8 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <!-- First Name -->
       <v-row>
         <v-col>
           <v-text-field
@@ -26,6 +29,8 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <!-- Middle Name -->
       <v-row>
         <v-col>
           <v-text-field
@@ -36,6 +41,8 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <!-- Last Name -->
       <v-row>
         <v-col>
           <v-text-field
@@ -48,6 +55,8 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <!-- Suffix -->
       <v-row>
         <v-col>
           <v-text-field
@@ -58,6 +67,8 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <!-- Preferred Name -->
       <v-row>
         <v-col>
           <v-text-field
@@ -101,6 +112,10 @@ export default class EditName extends Vue {
   public validate() {
     this.valid = (this.$refs.form as HTMLFormElement).validate();
     return this.valid;
+  }
+
+  public reset() {
+    this.valid = false;
   }
 
   public submit(isChild?: boolean) {

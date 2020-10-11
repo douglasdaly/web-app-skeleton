@@ -16,6 +16,7 @@ from app.crud.repos.base import (
     Repository,
     RepositoryBase,
 )
+from app.crud.models.role import RoleType
 from app.crud.models.user import UserType
 from app.schema.name import (
     NameCreate,
@@ -35,6 +36,16 @@ class UserRepository(Repository, tp.Protocol):
     def get_by_email(self, email: str) -> tp.Optional[UserType]:
         ...
 
+    def _helper_format_roles(
+        self,
+        role: tp.Union[
+            str,
+            tp.Tuple[str, ...],
+            tp.List[tp.Union[str, tp.Tuple[str, ...]]],
+        ],
+    ) -> tp.List[tp.Tuple[RoleType, ...]]:
+        ...
+
     def get_by_role(
         self,
         role: tp.Union[
@@ -46,6 +57,16 @@ class UserRepository(Repository, tp.Protocol):
         skip: int = 0,
         limit: tp.Optional[int] = 100,
     ) -> tp.List[UserType]:
+        ...
+
+    def count_by_role(
+        self,
+        role: tp.Union[
+            str,
+            tp.Tuple[str, ...],
+            tp.List[tp.Union[str, tp.Tuple[str, ...]]],
+        ],
+    ) -> int:
         ...
 
     def authenticate(
@@ -83,27 +104,60 @@ class UserRepositoryBase(
         """
         pass
 
-    @classmethod
     def _helper_format_roles(
-        cls,
+        self,
         role: tp.Union[
             str,
             tp.Tuple[str, ...],
             tp.List[tp.Union[str, tp.Tuple[str, ...]]],
         ],
-    ) -> tp.List[tp.Tuple[str, ...]]:
+    ) -> tp.List[tp.Tuple[RoleType, ...]]:
         """Helper function for formatting input `role` parameters."""
-        roles = []
+        roles: tp.List[tp.Tuple[RoleType, ...]] = []
         if isinstance(role, list):
             for r in role:
-                roles.extend(cls._helper_format_roles(r))
+                roles.extend(self._helper_format_roles(r))
         else:
             if isinstance(role, str):
-                role = (role,)
-            if isinstance(role, tuple):
+                role = (role.lower(),)
+            elif isinstance(role, tuple):
                 role = tuple(x.lower() for x in role)
-            roles.append(role)
+            mod_roles = (self.uow.role.get_by_name(x) for x in role)
+            roles.append(tuple(x for x in mod_roles if x is not None))
         return roles
+
+    @abstractmethod
+    def count_by_role(
+        self,
+        role: tp.Optional[
+            tp.Union[
+                str,
+                tp.Tuple[str, ...],
+                tp.List[tp.Union[str, tp.Tuple[str, ...]]],
+            ]
+        ],
+    ) -> int:
+        """Gets the number of users with the role(s) given.
+
+        Parameters
+        ----------
+        role : Union[str, Tuple[str, ...]], or ``list`` thereof, or
+        ``None``
+            The name of the role (or ``tuple`` of roles) to count the
+            users with.  If a ``tuple`` is used, then only users with
+            all of these roles are returned.  If a list is given, the
+            same logic applies to the items, but the union of all users
+            matching any of the listed items is returned.  If given
+            ``None`` it will return users without any associated roles.
+
+        Returns
+        -------
+        int
+            The number of users with the given role(s) and matching
+            criteria.
+
+        """
+        pass
 
     @abstractmethod
     def get_by_role(
@@ -179,7 +233,7 @@ class UserRepositoryBase(
             data['name'] = name
 
         roles_in = data.pop('roles', None)
-        if roles_in:
+        if roles_in is not None:
             roles_in = [self.uow.role.get_by_name(x) for x in roles_in]
             data['roles'] = roles_in
 

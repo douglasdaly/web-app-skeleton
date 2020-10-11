@@ -1,9 +1,11 @@
 import authApi from './endpoints/auth';
-import userApi from './endpoints/user';
+import rolesApi from './endpoints/roles';
+import usersApi from './endpoints/user';
 
 const api = {
   auth: authApi,
-  user: userApi,
+  roles: rolesApi,
+  user: usersApi,
 };
 
 export default api;

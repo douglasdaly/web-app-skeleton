@@ -23,3 +23,6 @@ class RoleBase(ModelBase):
     """
     name: str
     description: tp.Optional[str]
+
+    def __repr__(self) -> str:
+        return super().__repr__()[:-1] + f", name={self.name!r})"

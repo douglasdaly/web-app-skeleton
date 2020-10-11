@@ -7,6 +7,8 @@ import RoutesModule from '@/store/modules/routes';
 import AccountLayout from '@/layouts/AccountLayout.vue';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
+import adminRoutes from './modules/admin';
+
 Vue.use(VueRouter);
 
 /**
@@ -111,6 +113,8 @@ export const dynamicRoutes: RouteConfig[] = [
       requiresAuth: true,
       hidden: true,
       roles: ['user'],
+      title: 'My Account',
+      icon: 'mdi-account-cog',
     },
     children: [
       {
@@ -120,7 +124,7 @@ export const dynamicRoutes: RouteConfig[] = [
         meta: {
           title: 'Dashboard',
           icon: 'mdi-view-dashboard',
-        }
+        },
       },
       {
         path: 'profile',
@@ -129,7 +133,7 @@ export const dynamicRoutes: RouteConfig[] = [
         meta: {
           title: 'Profile',
           icon: 'mdi-card-account-details-outline',
-        }
+        },
       },
       {
         path: 'authorization',
@@ -141,7 +145,8 @@ export const dynamicRoutes: RouteConfig[] = [
         },
       },
     ]
-  }
+  },
+  adminRoutes,
 ];
 
 const createRouter = () => new VueRouter({
