@@ -21,8 +21,9 @@ sqlalchemy-stubs = "*"
 click = "*"
 email-validator = "*"
 emails = "*"
-fastapi = "==0.60.1"
+fastapi = "*"
 gunicorn = "*"
+httptools = "*"
 orjson = "*"
 passlib = {extras = ["bcrypt"],version = "*"}
 pydantic = "*"
@@ -34,6 +35,7 @@ requests = "*"
 sqlalchemy = "*"
 tenacity = "*"
 uvicorn = "*"
+uvloop = "*"
 
 [requires]
 python_version = "3.8"
