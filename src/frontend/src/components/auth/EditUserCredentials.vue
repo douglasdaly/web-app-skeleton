@@ -97,6 +97,13 @@ export default class EditUserCredentials extends Vue {
     return this.valid;
   }
 
+  public reset() {
+    this.valid = false;
+    this.showPassword1 = false;
+    this.showPassword2 = false;
+    this.confirmPassword = '';
+  }
+
   public submit(isChild?: boolean) {
     const child = isChild === false ? false : this.isChild;
     if (child) {

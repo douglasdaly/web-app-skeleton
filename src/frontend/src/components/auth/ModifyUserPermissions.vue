@@ -46,7 +46,7 @@
             item-value="name"
             label="Role(s)"
             multiple
-            hint="Select the role(s) for the new user"
+            hint="Select the role(s) for the user"
             persistent-hint
           ></v-select>
         </v-col>

@@ -2,7 +2,10 @@
 """
 Core functionality for the SQLAlchemy storage driver.
 """
-from app.core.config import settings
+from app.core.config import (
+    REQUIRED_ROLES,
+    settings,
+)
 from app.drivers.sqlalchemy import (
     models,
     repos,
@@ -37,8 +40,8 @@ def storage_ready() -> bool:
         Whether or not the storage system is ready for use.
 
     """
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         db.execute("SELECT 1")
         return True
     except Exception:
@@ -68,15 +71,14 @@ def setup_storage() -> None:
     Base.metadata.create_all(bind=engine)
 
     uow = create_uow()
-    # - Make admin role
-    role = uow.role.get_by_name('admin')
-    if not role:
-        new_role = RoleCreate(
-            name="admin",
-            description="System administrator role.",
-        )
-        with uow:
-            role = uow.role.create(obj_in=new_role)
+
+    # - Make necessary roles
+    for name, desc in REQUIRED_ROLES.items():
+        role = uow.role.get_by_name(name)
+        if not role:
+            new_role = RoleCreate(name=name, description=desc)
+            with uow:
+                role = uow.role.create(obj_in=new_role)
 
     # - Make first admin
     user = uow.user.get_by_email(settings.FIRST_ADMIN_USER)
@@ -86,7 +88,7 @@ def setup_storage() -> None:
             password=settings.FIRST_ADMIN_PASSWORD,
             is_superuser=True,
             is_admin=True,
-            roles=[role.name],
+            roles=[x for x in REQUIRED_ROLES],
         )
         with uow:
             user = uow.user.create(obj_in=new_user)

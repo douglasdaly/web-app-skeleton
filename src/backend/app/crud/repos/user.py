@@ -233,7 +233,7 @@ class UserRepositoryBase(
             data['name'] = name
 
         roles_in = data.pop('roles', None)
-        if roles_in:
+        if roles_in is not None:
             roles_in = [self.uow.role.get_by_name(x) for x in roles_in]
             data['roles'] = roles_in
 

@@ -202,7 +202,7 @@ class RepositoryBase(
         ----------
         obj : ModelType
             The existing object to update.
-        obj_in : Union[Dict[str, Any], CreateSchemaType]
+        obj_in : Union[Dict[str, Any], UpdateSchemaType]
             The updated object (or data to update `obj` using) to use.
 
         Returns

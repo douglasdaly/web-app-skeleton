@@ -29,7 +29,7 @@ for m in models.__all__:
     repo = MODEL_MAP.get(model, repos.Repository)
     UnitOfWork.register(model, repo)
 
-# Load required functions
+# Load required driver functions
 create_uow = load_driver_function('create_uow')
 init_storage = load_driver_function('init_storage')
 setup_storage = load_driver_function('setup_storage')

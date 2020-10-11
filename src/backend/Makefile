@@ -151,6 +151,12 @@ debug:  ## Runs the application for debugging.
 	@printf '\033[36m%s\033[0m\n' 'STARTING BACKEND FOR DEBUGGING'
 	$(RUN_UVICORN) app.main:app --debug --reload --port=$(SERVER_PORT)
 
+.PHONY: debug-reset
+debug-reset:  ### Resets the debug app state.
+	@printf '\033[36m%s\033[0m\n' 'RESETTING DEBUG BACKEND APP STATE'
+	rm -f db.sqlite3
+	$(RUN_PRE) app storage setup
+
 # Misc.
 .PHONY: cloc
 cloc:  ## Count lines of code

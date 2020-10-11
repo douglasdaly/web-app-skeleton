@@ -114,6 +114,10 @@ export default class EditName extends Vue {
     return this.valid;
   }
 
+  public reset() {
+    this.valid = false;
+  }
+
   public submit(isChild?: boolean) {
     const child = isChild === false ? false : this.isChild;
     if (child) {

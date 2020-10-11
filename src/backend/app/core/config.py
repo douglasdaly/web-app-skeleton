@@ -13,6 +13,14 @@ from pydantic import (
 )
 
 
+REQUIRED_ROLES: tp.Dict[str, str] = {
+    'admin': 'System administrator role.',
+    'user': 'Standard user role.',
+}
+"""Dict[str, str]: The (minimum) required user roles (and descriptions).
+"""
+
+
 class Settings(BaseSettings):
     """
     API application settings class

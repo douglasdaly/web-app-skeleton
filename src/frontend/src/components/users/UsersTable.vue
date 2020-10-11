@@ -167,7 +167,7 @@
           :can-delete="canDelete(item.uid)"
           open-on-hover
           @item-view="showUser(item.uid)"
-          @item-edit="editUser(item.uid)"
+          @item-edit="startEditUser(item.uid)"
           @item-delete="startDeleteUser(item.uid)"
         ></list-item-actions>
       </template>
@@ -200,9 +200,20 @@
 
     <!-- Edit Dialog -->
     <v-dialog v-model="editDialog"
+      persistent
       max-width="650px"
     >
-      <v-card></v-card>
+      <v-card>
+        <edit-user-full
+          ref="editUserForm"
+          v-model="selectedUser"
+          edit-login
+          edit-auths
+          @cancel="cancelEditUser()"
+          @submit="editUser()"
+        >
+        </edit-user-full>
+      </v-card>
     </v-dialog>
 
     <!-- Delete Dialog -->
@@ -271,6 +282,7 @@ import CreateUserFull from './CreateUserFull.vue';
 import DisplayUser from './DisplayUser.vue';
 import DisplayUserAuth from '@/components/auth/DisplayUserAuth.vue';
 import DisplayUserDetailed from './DisplayUserDetailed.vue';
+import EditUserFull from './EditUserFull.vue';
 import ListItemActions from '@/components/utilities/ListItemActions.vue';
 import MultiCheckList, { CheckItem } from '@/components/utilities/MultiCheckList.vue';
 
@@ -298,6 +310,7 @@ export interface ListHeader {
     DisplayUser,
     DisplayUserAuth,
     DisplayUserDetailed,
+    EditUserFull,
     ListItemActions,
     MultiCheckList,
   }
@@ -490,12 +503,17 @@ export default class UsersTable extends Vue {
   }
 
   // -- Edit
-  public startEditUser() {
+  public async startEditUser(userId: string) {
+    this.dialogLoading = true;
+    this.selectedUser = await api.user.readUserById(userId);
     this.editDialog = true;
+    this.dialogLoading = false;
   }
 
-  public editUser(userId: string) {
-    console.log(userId);
+  public async editUser() {
+    this.editDialog = false;
+    this.selectedUser = null;
+    await this.update();
   }
 
   public cancelEditUser() {
