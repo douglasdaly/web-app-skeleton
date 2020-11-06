@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Full: Debug",
+            "configurations": ["Backend: Debug", "Frontend: Debug", "Chrome"]
+        }
+    ],
+    "configurations": [
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "Backend: Debug",
+            "cwd": "${workspaceFolder}/src/backend",
+            "program": "app/cli/core.py",
+            "args": [
+                "run",
+            ],
+            "envFile": "${workspaceFolder}/src/backend/.env"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/src/frontend"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Frontend: Debug",
+            "cwd": "${workspaceFolder}/src/frontend",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+              "serve"
+            ],
+            "envFile": "${workspaceFolder}/src/frontend/.env"
+        }
+    ]
+}
