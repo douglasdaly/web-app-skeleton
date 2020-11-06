@@ -50,11 +50,15 @@ help:  ## Shows the help menu for all targets.
 
 # Environment
 .PHONY: setup
-setup: setup-backend  ## Sets up the development environment.
+setup: setup-backend setup-frontend  ## Sets up the development environment.
 
 .PHONY: setup-backend
 setup-backend:  ### Sets up the backend's development environment.
 	$(MAKE) -C $(BACKEND_DIR) setup
+
+.PHONY: setup-frontend
+setup-frontend:  ### Sets up the frontend's development environment.
+	$(MAKE) -C $(FRONTEND_DIR) setup
 
 .PHONY: teardown
 teardown:  ## Tears down the development environment.
